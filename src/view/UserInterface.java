@@ -72,7 +72,7 @@ public class UserInterface extends JFrame {
 		contentPane.setLayout(null);
 
 		toolboxPanel = new JPanel();
-		toolboxPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		toolboxPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 		toolboxPanel.setBounds(0, 0, 118, 534);
 		contentPane.add(toolboxPanel);
 		toolboxPanel.setLayout(null);
@@ -144,7 +144,7 @@ public class UserInterface extends JFrame {
 		lineColorPanel = new JPanel();
 		lineColorPanel.setToolTipText("Line color");
 		lineColorPanel.setBackground(new Color(50, 205, 50));
-		lineColorPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lineColorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 		lineColorPanel.setBounds(12, 303, 90, 45);
 		toolboxPanel.add(lineColorPanel);
 
@@ -163,7 +163,7 @@ public class UserInterface extends JFrame {
 		fillColorPanel = new JPanel();
 		fillColorPanel.setToolTipText("Fill color");
 
-		fillColorPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		fillColorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 		fillColorPanel.setBackground(Color.ORANGE);
 		fillColorPanel.setBounds(12, 380, 90, 45);
 		toolboxPanel.add(fillColorPanel);
@@ -174,10 +174,11 @@ public class UserInterface extends JFrame {
 		toolboxPanel.add(btnReset);
 
 		drawPanel = new JPanel();
+		drawPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 
 		drawPanel.setBackground(Color.WHITE);
 		drawPanel.setForeground(Color.BLACK);
-		drawPanel.setBounds(118, 0, 789, 534);
+		drawPanel.setBounds(117, 0, 790, 534);
 		contentPane.add(drawPanel);
 		addListeners();
 	}
