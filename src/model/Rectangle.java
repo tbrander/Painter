@@ -1,14 +1,14 @@
-package view;
+package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Square extends Shape {
+public class Rectangle extends Shape {
 	
 
 	private double width, height;
 	
-	public Square(double x, double y,double width, double height,  Color fillColor, int strokeThickness) {
+	public Rectangle(double x, double y,double width, double height,  Color fillColor, int strokeThickness) {
 		super(x, y, fillColor, strokeThickness);
 		this.width = width;
 		this.height = height;

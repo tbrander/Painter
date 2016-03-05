@@ -1,4 +1,4 @@
-package view;
+package model;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -35,6 +35,8 @@ public abstract class Shape {
 	public double getY() {
 		return y;
 	}
+	
+	
 
 	abstract protected void drawStep(Graphics2D g);
 

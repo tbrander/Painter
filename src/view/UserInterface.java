@@ -4,25 +4,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
 import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
+import controller.PaintController;
 
 public class UserInterface extends JFrame {
 
@@ -35,10 +28,11 @@ public class UserInterface extends JFrame {
 	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnMarker,	btnLine, btnFill, btnColorPicker;
 	private JSlider slider;
 	private JLabel lblLineThickness;
-	private Shape currentShape;
-	private int currentFlagShape;
+	private PaintController paintController;
+	
 
 	public UserInterface() {
+		
 		setTitle("Labb2 Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 925, 607);
@@ -84,6 +78,7 @@ public class UserInterface extends JFrame {
 		toolboxPanel.add(btnCircle);
 
 		btnSquare = new JButton("");
+
 		btnSquare.setToolTipText("Square");
 		btnSquare.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\square.jpg"));
 		btnSquare.setBounds(61, 13, 41, 25);
@@ -100,22 +95,19 @@ public class UserInterface extends JFrame {
 		btnTriangle = new JButton("");
 		btnTriangle.setToolTipText("Triangle");
 		btnTriangle.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\triangle.jpg"));
-
-
-
 		btnTriangle.setBounds(61, 51, 41, 25);
 		toolboxPanel.add(btnTriangle);
 
 		btnMarker = new JButton("");
 		btnMarker.setToolTipText("Marker");
 		btnMarker.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\marker.jpg"));
-		btnMarker.setBounds(12, 89, 41, 25);
+		btnMarker.setBounds(61, 88, 41, 25);
 		toolboxPanel.add(btnMarker);
 
 		btnLine = new JButton("");
 		btnLine.setToolTipText("Line");
 		btnLine.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\line.jpg"));
-		btnLine.setBounds(61, 89, 41, 25);
+		btnLine.setBounds(12, 88, 41, 25);
 		toolboxPanel.add(btnLine);
 
 		btnFill = new JButton("");
@@ -131,8 +123,9 @@ public class UserInterface extends JFrame {
 		toolboxPanel.add(btnColorPicker);
 
 		slider = new JSlider();
+		slider.setMinimum(1);
 		slider.setToolTipText("Line thickness");
-		slider.setValue(5);
+		slider.setValue(3);
 		slider.setMaximum(10);
 		slider.setPaintTicks(true);
 		slider.setSnapToTicks(true);
@@ -161,6 +154,7 @@ public class UserInterface extends JFrame {
 		toolboxPanel.add(lblFillColor);
 
 		fillColorPanel = new JPanel();
+
 		fillColorPanel.setToolTipText("Fill color");
 
 		fillColorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
@@ -180,69 +174,50 @@ public class UserInterface extends JFrame {
 		drawPanel.setForeground(Color.BLACK);
 		drawPanel.setBounds(117, 0, 790, 534);
 		contentPane.add(drawPanel);
-		addListeners();
+		
+		paintController = new PaintController(this);
+		
 	}
 
-	private void addListeners() {
+	public void addPanelListeners(MouseListener addMouseListenerDrawPanel, MouseListener colorFillPanelListener, MouseListener colorLinePanelListener) {
+		
 
-		drawPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("x: " + e.getX() + " y: " + e.getY());
-				switch (currentFlagShape) {
-				case 4:
-					currentShape = new Triangle(e.getX(), e.getY(),
-							lineColorPanel.getBackground(), 5);
-					currentShape.draw(drawPanel.getGraphics());
-					break;
-				default:
-					System.out.println("def");
-
-				}
-			}
-		});
+		drawPanel.addMouseListener(addMouseListenerDrawPanel);
+		lineColorPanel.addMouseListener(colorLinePanelListener);
+		fillColorPanel.addMouseListener(colorFillPanelListener);
 		
-		fillColorPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Color newColor = JColorChooser.showDialog(
-						view.UserInterface.this, "Choose fill Color",
-						fillColorPanel.getBackground());
-				if (newColor != null)
-					fillColorPanel.setBackground(newColor);
-			}
-		});
-		
-		lineColorPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Color newColor = JColorChooser.showDialog(
-						view.UserInterface.this, "Choose line Color",
-						lineColorPanel.getBackground());
-				if (newColor != null)
-					lineColorPanel.setBackground(newColor);
-			}
-		});
-		
-		btnTriangle.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				currentFlagShape = 4;
-			}
-		});
-
-		
-		btnRectangle.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				currentFlagShape = 3;
-			}
-		});
-		
-		slider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent val) {
-				lblLineThickness.setText("Line size: "+ ((JSlider) val.getSource()).getValue());
-			}
-		});
 	}
+	
+	public void addButtonAndSlideListeners(ActionListener btnCircleListener, ActionListener btnLineListener, ActionListener btnRectangleListener, ActionListener btnSquareListener, ActionListener btnTriangleListener, ChangeListener lineThicknessSliderListener){
+		btnCircle.addActionListener(btnCircleListener);
+		btnSquare.addActionListener(btnSquareListener);
+		btnLine.addActionListener(btnLineListener);
+		btnRectangle.addActionListener(btnRectangleListener);
+		btnTriangle.addActionListener(btnTriangleListener);
+		slider.addChangeListener(lineThicknessSliderListener);
+	}
+
+	public Color getLinePanelColor() {
+		return lineColorPanel.getBackground();
+	}
+
+	public int getLineThickness() {
+		return slider.getValue();
+	}
+
+	public JPanel getLineColorPanel() {
+		return lineColorPanel;
+	}
+
+	public JPanel getFillColorPanel() {
+		return fillColorPanel;
+	}
+
+	public JLabel getLblLineThickness() {
+		return lblLineThickness;
+	}
+	
+	
+	
+	
 }
