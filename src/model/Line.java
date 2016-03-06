@@ -7,8 +7,8 @@ public class Line extends Shape {
 	
 	private double x2, y2;
 	
-	public Line(double x1, double y1,double x2, double y2, Color fillColor, int strokeThickness) {
-		super(x1, y1, fillColor, strokeThickness);
+	public Line(double x1, double y1,double x2, double y2, Color color, int strokeThickness) {
+		super(x1, y1, color, strokeThickness, false);
 		this.x2 = x2;
 		this.y2 = y2;
 		
