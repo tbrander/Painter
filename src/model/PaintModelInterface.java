@@ -10,7 +10,7 @@ public interface PaintModelInterface {
 	void notifyObservers();
 	void addObserver(Observer o);
 	List<Shape> getShapeList();
-	Shape getCurrentShape(); // bättre namn?
+	Shape getCurrentShape();
 	void resetDrawPanel();
 	void selectShape(double x, double y);
 

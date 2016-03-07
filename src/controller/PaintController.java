@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 
 import javax.swing.JColorChooser;
 import javax.swing.JSlider;
@@ -27,27 +28,29 @@ public class PaintController implements Observer {
 	private PaintModelInterface paintModel;
 	private Shape currentShape;
 	private int currentToolFlag;
+	private boolean activeSelection;
 
 	public PaintController(UserInterface userInterface) {
-	
+
 		currentToolFlag = 1;
 		paintModel = new PaintModel(this);
 		ui = userInterface;
 		ui.addPanelListeners(new AddMouseListenerDrawPanel(),
 				new ColorLinePanelListener());
-		
+
 		ui.addButtonAndSlideListeners(new BtnCircleListener(),
 				new BtnLineListener(), new BtnRectangleListener(),
-				new BtnSquareListener(), new BtnTriangleListener(), new LineThicknessSliderListener(),
+				new BtnSquareListener(), new BtnTriangleListener(),
+				new LineThicknessSliderListener(),
 				new ShapeSizeSliderListener(), new BtnSelectListener());
-		
+
 		ui.addMenyItemListeners(new MenyItemNewDocListener());
 	}
 
 	@Override
 	public void update() {
 
-		if (paintModel.getShapeList().size() == 0){
+		if (paintModel.getShapeList().size() == 0) {
 			ui.getDrawPanel().repaint();
 		}
 		ui.getDrawPanel().removeAll();
@@ -57,8 +60,6 @@ public class PaintController implements Observer {
 
 		// rita bara senaste shape
 		// paintModel.getShapeList().get(paintModel.getShapeList().size()-1).draw(ui.getDrawPanel().getGraphics());
-
-
 	}
 
 	class AddMouseListenerDrawPanel implements MouseListener {
@@ -84,7 +85,7 @@ public class PaintController implements Observer {
 				break;
 			case 3:
 				currentShape = new Rectangle(e.getX(), e.getY(), shapeSize,
-						shapeSize*2, color, ui.getLineThickness(), isFilled);
+						shapeSize * 2, color, ui.getLineThickness(), isFilled);
 				break;
 			case 4:
 				currentShape = new Triangle(e.getX(), e.getY(), shapeSize,
@@ -92,12 +93,12 @@ public class PaintController implements Observer {
 				break;
 			case 6:
 				paintModel.selectShape(e.getX(), e.getY());
-				return;
+				break;
 			default:
 				System.out.println("def");
 				return;
 			}
-			
+
 			paintModel.addShape(currentShape);
 		}
 
@@ -136,7 +137,7 @@ public class PaintController implements Observer {
 		}
 
 	}
-	
+
 	class MenyItemNewDocListener implements ActionListener {
 
 		@Override
@@ -223,7 +224,7 @@ public class PaintController implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			currentToolFlag = 6;
 			ui.setLblSelectedTool("Selection");
-			
+
 		}
 	}
 
