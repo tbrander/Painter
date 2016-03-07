@@ -18,16 +18,22 @@ public class Rectangle extends Shape {
 
 	@Override
 	protected void drawStep(Graphics2D g) {
-		//g.drawRect((int)super.getX(),(int) super.getY(),(int) width,(int) height);
-		
-		Rectangle2D rect= new Rectangle2D.Double(super.getX(), super.getY(), width, height);
 		
 		if(super.isFilled())
-			g.fill(rect);
-		g.draw(rect);
+			g.fillRect((int)super.getX(),(int) super.getY(),(int) width,(int) height);
+		g.drawRect((int)super.getX(),(int) super.getY(),(int) width,(int) height);
 		
 	}
-	
-	
+
+	@Override
+	protected java.awt.Shape getShape2D() {
+
+		java.awt.Shape rect = new Rectangle2D.Double(super.getX(),super.getY(),width,height);
+		
+		return rect;
+	}
+
+
+
 
 }

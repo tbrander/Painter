@@ -12,5 +12,6 @@ public interface PaintModelInterface {
 	List<Shape> getShapeList();
 	Shape getCurrentShape(); // bättre namn?
 	void resetDrawPanel();
+	void selectShape(double x, double y);
 
 }
