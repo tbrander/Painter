@@ -13,6 +13,7 @@ public class Rectangle extends Shape {
 		super(x, y, color, strokeThickness,isFilled);
 		this.width = width;
 		this.height = height;
+		setShapeLabel("Rect_"+(++shapeCounter));
 	}
 
 

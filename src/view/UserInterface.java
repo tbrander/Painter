@@ -4,7 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -12,14 +14,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JButton;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.ImageIcon;
+
 import controller.PaintController;
+
 import javax.swing.JRadioButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import java.awt.Checkbox;
+
+import javax.swing.JComboBox;
+import javax.swing.JRadioButtonMenuItem;
 
 public class UserInterface extends JFrame {
 
@@ -34,12 +43,19 @@ public class UserInterface extends JFrame {
 	private JLabel lblLineThickness, lblShapeSize, lblSelectedTool;
 	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
+	private JRadioButtonMenuItem rdBtnItemSelect,rdBtnItemModify,rdBtnItemDelete;
+	private JComboBox shapeComboBox;
+	private Checkbox checkBoxShapeLabel;
+	
+	
+	
+	
 
 	public UserInterface() {
 		
 		setTitle("Labb2 Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 938, 613);
+		setBounds(100, 100, 949, 628);
 
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -65,6 +81,18 @@ public class UserInterface extends JFrame {
 
 		mntmRedo = new JMenuItem("Redo");
 		mnOptions.add(mntmRedo);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		rdBtnItemSelect = new JRadioButtonMenuItem("Select");
+		mnTools.add(rdBtnItemSelect);
+		
+		rdBtnItemModify = new JRadioButtonMenuItem("Modify");
+		mnTools.add(rdBtnItemModify);
+		
+		rdBtnItemDelete = new JRadioButtonMenuItem("Delete");
+		mnTools.add(rdBtnItemDelete);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -124,31 +152,31 @@ public class UserInterface extends JFrame {
 		sliderLineThickness.setSnapToTicks(true);
 		sliderLineThickness.setPaintLabels(true);
 		sliderLineThickness.setMinorTickSpacing(1);
-		sliderLineThickness.setBounds(12, 171, 90, 26);
+		sliderLineThickness.setBounds(12, 157, 90, 26);
 		toolboxPanel.add(sliderLineThickness);
 
 		colorPanel = new JPanel();
 		colorPanel.setToolTipText("Line color");
-		colorPanel.setBackground(new Color(50, 205, 50));
+		colorPanel.setBackground(new Color(30, 144, 255));
 		colorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
-		colorPanel.setBounds(12, 403, 90, 95);
+		colorPanel.setBounds(12, 335, 90, 95);
 		toolboxPanel.add(colorPanel);
 
 		lblLineThickness = new JLabel("Line size: "+sliderLineThickness.getValue());
-		lblLineThickness.setBounds(12, 150, 90, 16);
+		lblLineThickness.setBounds(12, 136, 90, 16);
 		toolboxPanel.add(lblLineThickness);
 
 		JLabel lblColor = new JLabel("Color:");
-		lblColor.setBounds(12, 383, 90, 16);
+		lblColor.setBounds(12, 315, 90, 16);
 		toolboxPanel.add(lblColor);
 		
 		rdbtnOutline = new JRadioButton("Outline");
 		rdbtnOutline.setSelected(true);
-		rdbtnOutline.setBounds(18, 294, 71, 24);
+		rdbtnOutline.setBounds(12, 255, 71, 24);
 		toolboxPanel.add(rdbtnOutline);
 		
 		rdbtnFilled = new JRadioButton("Filled");
-		rdbtnFilled.setBounds(18, 322, 71, 24);
+		rdbtnFilled.setBounds(12, 283, 71, 24);
 		toolboxPanel.add(rdbtnFilled);
 		
 		ButtonGroup group = new ButtonGroup();
@@ -160,17 +188,25 @@ public class UserInterface extends JFrame {
 	    sliderShapeSize = new JSlider();
 	    sliderShapeSize.setPaintTicks(true);
 	    sliderShapeSize.setMaximum(70);
-	    sliderShapeSize.setValue(10);
+	    sliderShapeSize.setValue(55);
 	    sliderShapeSize.setToolTipText("Shape size");
 	    sliderShapeSize.setPaintLabels(true);
 	    sliderShapeSize.setMinorTickSpacing(5);
 	    sliderShapeSize.setMinimum(5);
-	    sliderShapeSize.setBounds(12, 242, 90, 26);
+	    sliderShapeSize.setBounds(12, 216, 90, 26);
 	    toolboxPanel.add(sliderShapeSize);
 	    
 	    lblShapeSize = new JLabel("Shape size: "+sliderShapeSize.getValue());
-	    lblShapeSize.setBounds(12, 221, 90, 16);
+	    lblShapeSize.setBounds(12, 195, 90, 16);
 	    toolboxPanel.add(lblShapeSize);
+	    
+	    checkBoxShapeLabel = new Checkbox("Show labels");
+	    checkBoxShapeLabel.setBounds(12, 446, 101, 23);
+	    toolboxPanel.add(checkBoxShapeLabel);
+	    
+	    shapeComboBox = new JComboBox();
+	    shapeComboBox.setBounds(12, 479, 90, 25);
+	    toolboxPanel.add(shapeComboBox);
 
 		drawPanel = new JPanel();
 		drawPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
@@ -248,8 +284,21 @@ public class UserInterface extends JFrame {
 
 
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc) {
-		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener) {
 		
+		
+		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
+		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
+		
+	}
+
+	public void addComponentListeners(MouseListener shapeLabelCheckBox) {
+
+		checkBoxShapeLabel.addMouseListener(shapeLabelCheckBox);
+		
+	}
+
+	public JComboBox getShapeComboBox() {
+		return shapeComboBox;
 	}
 }

@@ -14,6 +14,7 @@ public class Square extends Shape {
 		super(x, y, color, strokeThickness,isFilled);
 		this.width = width;
 		this.height = height;
+		setShapeLabel("Square_"+(++shapeCounter));
 	}
 
 

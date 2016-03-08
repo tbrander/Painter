@@ -12,12 +12,14 @@ public class PaintModel implements PaintModelInterface {
 	private List<Observer> observers;
 	private Shape currentShape;
 	private boolean activeSelection;
+	private PaintController paintController;
 
-	public PaintModel(PaintController p) {
+	public PaintModel(PaintController paintController) {
 
+		this.paintController=paintController;
 		shapes = new ArrayList<>();
 		observers = new ArrayList<>();
-		observers.add(p);
+		observers.add(paintController);
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class PaintModel implements PaintModelInterface {
 				}
 			}
 			activeSelection=true;
-			notifyObservers();
+			paintController.drawSelected();
 		}
 	}
 

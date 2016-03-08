@@ -12,6 +12,7 @@ public class Circle extends Shape {
 	public Circle(double x, double y,double radius,  Color color, int strokeThickness, boolean isFilled) {
 		super(x, y, color, strokeThickness, isFilled);
 		this.radius = radius;
+		setShapeLabel("Circle_"+(++shapeCounter));
 	}
 
 	@Override
@@ -19,19 +20,18 @@ public class Circle extends Shape {
 		
 		
 		if(super.isFilled()){
-			g.fillOval((int)super.getX(), (int)super.getY(), (int)radius, (int)radius);
+			g.fillOval((int)getX(), (int)getY(), (int)radius, (int)radius);
 		}
-		g.drawOval((int)super.getX(), (int)super.getY(), (int)radius, (int)radius);
+		g.drawOval((int)getX(), (int)getY(), (int)radius, (int)radius);
 	}
 
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape oval = new Ellipse2D.Double(super.getX(),super.getY(),radius,radius);
+		java.awt.Shape oval = new Ellipse2D.Double(getX(),getY(),radius,radius);
 		
 		return oval;
 	}
-
 	
 
 }

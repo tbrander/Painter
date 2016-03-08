@@ -14,6 +14,7 @@ public class Triangle extends Shape {
 			boolean isFilled) {
 		super(x, y, color, strokeThickness, isFilled);
 		this.size=size;
+		setShapeLabel("Triangle_"+(++shapeCounter));
 	}
 
 	@Override
