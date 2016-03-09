@@ -13,6 +13,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import model.Arc;
 import model.Circle;
 import model.Line;
 import model.PaintModel;
@@ -28,14 +29,15 @@ public class PaintController implements Observer {
 	private UserInterface ui;
 	private PaintModelInterface paintModel;
 	private Shape currentShape;
-	private enumTools currentShapeFlag;
-	private boolean activeSelection, showShapeLabels;
-	private enumTools selectedTool;
+	private tools currentShapeFlag;
+	private tools selectedTool;
+	private double pressedX, pressedY, releasedX, releasedY;
 	
 
 	public PaintController(UserInterface userInterface) {
 
-		currentShapeFlag = enumTools.CIRCLE;
+		selectedTool=tools.NONE;
+		currentShapeFlag = tools.NONE;
 		paintModel = new PaintModel(this);
 		ui = userInterface;
 		ui.addPanelListeners(new AddMouseListenerDrawPanel(),
@@ -44,17 +46,15 @@ public class PaintController implements Observer {
 		ui.addButtonAndSlideListeners(new BtnCircleListener(),
 				new BtnLineListener(), new BtnRectangleListener(),
 				new BtnSquareListener(), new BtnTriangleListener(),
-				new LineThicknessSliderListener(),
-				new ShapeSizeSliderListener(), new BtnSelectListener());
+				new LineThicknessSliderListener(), new BtnArcListener());
 
 		ui.addMenyItemListeners(new MenyItemNewDocListener(), new MenyItemSelectorListener());
 		
-		ui.addComponentListeners(new ShapeLabelCheckBox());
 	}
 	
 	
-	public enum enumTools {
-		 NONE,CIRCLE, SQUARE , RECTANGLE, TRIANGLE, LINE, SELECTION, MODIFY,DELETE;
+	public enum tools {
+		 NONE, CIRCLE, SQUARE , RECTANGLE, TRIANGLE, LINE, ARC, SELECTION, MODIFY,DELETE;
 	}
 	
 	
@@ -62,75 +62,48 @@ public class PaintController implements Observer {
 	@Override
 	public void update() {
 
-		if (paintModel.getShapeList().size() == 0) {
-			ui.getDrawPanel().repaint();
-		}
+		ui.getDrawPanel().paintAll(ui.getDrawPanel().getGraphics());
 		
 		for (Shape s : paintModel.getShapeList()) {
-			s.draw(ui.getDrawPanel().getGraphics(), showShapeLabels);
+			s.draw(ui.getDrawPanel().getGraphics());
 		}
-
 	}
 	
 	public void drawSelected() {
 		for (Shape s : paintModel.getShapeList()) {
-			s.draw(ui.getDrawPanel().getGraphics(), showShapeLabels);
+			s.draw(ui.getDrawPanel().getGraphics());
 		}
 		
 	}
 
 	class AddMouseListenerDrawPanel implements MouseListener {
 
-		int pressedX, pressedY, releasedX, releasedY;
-
-		@SuppressWarnings("unchecked")
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
-			// Conditions for selected menu tools
-			
-			if(selectedTool==enumTools.SELECTION){
-				paintModel.selectShape(e.getX(), e.getY());
-				return;
-			}else if(selectedTool==enumTools.MODIFY){
-				
-				return;
-				
-			}else if(selectedTool==enumTools.DELETE){
-				
-			}
-
 			boolean isFilled = ui.getRadioBtnOption();
 			Color color = ui.getColorPanelPaint();
-			int shapeSize = ui.getShapeSize();
-
-			System.out.println("x: " + e.getX() + " y: " + e.getY());
-			switch (currentShapeFlag) {
-			case CIRCLE:
-				currentShape = new Circle(e.getX(), e.getY(), shapeSize, color,
-						ui.getLineThickness(), isFilled);
-				break;
-			case SQUARE:
-				currentShape = new Square(e.getX(), e.getY(), shapeSize,
-						shapeSize, color, ui.getLineThickness(), isFilled);
-				break;
-			case RECTANGLE:
-				currentShape = new Rectangle(e.getX(), e.getY(), shapeSize,
-						shapeSize * 2, color, ui.getLineThickness(), isFilled);
-				break;
-			case TRIANGLE:
-				currentShape = new Triangle(e.getX(), e.getY(), shapeSize,
-						color, ui.getLineThickness(), isFilled);
-				break;
-			case SELECTION: // temp case, kanske ska bort sen.
-				paintModel.selectShape(e.getX(), e.getY());
+			int lineThickness = ui.getLineThickness();
+			
+			// Conditions for selected menu tools
+			
+			if(selectedTool==tools.SELECTION){
+				if(paintModel.getIndexOfSelectedShape() >=0){
+					paintModel.updateShape(color,lineThickness, isFilled);
+					
+				}else
+					paintModel.selectShape(e.getX(), e.getY());
 				return;
-			default:
-				System.out.println("def");
+			}else if(selectedTool==tools.MODIFY){
+				
 				return;
+				
+			}else if(selectedTool==tools.DELETE){
+				
 			}
-			ui.getShapeComboBox().addItem(currentShape.getShapeLabel());
-			paintModel.addShape(currentShape);
+
+		
+		
 		}
 
 		@Override
@@ -147,25 +120,57 @@ public class PaintController implements Observer {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (currentShapeFlag == enumTools.LINE) {
 				pressedX = e.getX();
 				pressedY = e.getY();
-			}
-
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public void mouseReleased(MouseEvent e) {
+
+			if(selectedTool != tools.NONE) return;
+			
+			boolean isFilled = ui.getRadioBtnOption();
 			Color color = ui.getColorPanelPaint();
-			if (currentShapeFlag == enumTools.LINE) {
-				releasedX = e.getX();
-				releasedY = e.getY();
+			int lineThickness = ui.getLineThickness();
+			
+			
+			switch (currentShapeFlag) {
+			case CIRCLE:
+				currentShape = new Circle(pressedX,pressedY,e.getX(), e.getY(), color,
+						lineThickness, isFilled);
+				break;
+			case SQUARE:
+				currentShape = new Square(pressedX,pressedY,e.getX(), e.getY(),
+						color, lineThickness, isFilled);
+				break;
+			case RECTANGLE:
+				currentShape = new Rectangle(pressedX,pressedY,e.getX(), e.getY(),
+						color, lineThickness, isFilled);
+				break;
+			case TRIANGLE:
+				
+				currentShape = new Triangle(pressedX, pressedY, e.getX(), e.getY(),
+						color, lineThickness, isFilled);
+				break;
+			case LINE:
 				currentShape = new Line(pressedX, pressedY, releasedX,
-						releasedY, color, ui.getLineThickness());
-				ui.getShapeComboBox().addItem(currentShape.getShapeLabel());
-				paintModel.addShape(currentShape);
+						releasedY, color, lineThickness);
+				break;
+			
+			case ARC:
+				currentShape = new Arc(pressedX, pressedY, e.getX(), e.getY(), color, lineThickness,isFilled);
+				break;
+			case SELECTION: // temp case, kanske ska bort sen.
+				paintModel.selectShape(e.getX(), e.getY());
+				return;
+			default:
+				System.out.println("def");
+				return;
 			}
+			System.out.println("flag: "+selectedTool);
+			paintModel.addShape(currentShape);
+			
+			
 
 		}
 
@@ -220,44 +225,43 @@ public class PaintController implements Observer {
 
 	class BtnCircleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.CIRCLE;
-			ui.setLblSelectedTool("Circle");
+			currentShapeFlag = tools.CIRCLE;
+			ui.setLblSelectedShape("Circle");
 		}
 	}
 
 	class BtnSquareListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.SQUARE;
-			ui.setLblSelectedTool("Square");
+			currentShapeFlag = tools.SQUARE;
+			ui.setLblSelectedShape("Square");
 		}
 	}
 
 	class BtnRectangleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.RECTANGLE;
-			ui.setLblSelectedTool("Rectangle");
+			currentShapeFlag = tools.RECTANGLE;
+			ui.setLblSelectedShape("Rectangle");
+		}
+	}
+	
+	class BtnArcListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			currentShapeFlag = tools.ARC;
+			ui.setLblSelectedShape("Arc");
 		}
 	}
 
 	class BtnTriangleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.TRIANGLE;
-			ui.setLblSelectedTool("Triangle");
+			currentShapeFlag = tools.TRIANGLE;
+			ui.setLblSelectedShape("Triangle");
 		}
 	}
 
 	class BtnLineListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.LINE;
-			ui.setLblSelectedTool("Line");
-		}
-	}
-
-	class BtnSelectListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = enumTools.SELECTION;
-			ui.setLblSelectedTool("Selection");
-
+			currentShapeFlag = tools.LINE;
+			ui.setLblSelectedShape("Line");
 		}
 	}
 
@@ -271,70 +275,16 @@ public class PaintController implements Observer {
 
 	}
 
-	class ShapeSizeSliderListener implements ChangeListener {
-
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			ui.getlblShapeSize().setText(
-					"Shape size: " + ((JSlider) e.getSource()).getValue());
-		}
-
-	}
-	
-	class ShapeComboBox implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			 JComboBox cb = (JComboBox)e.getSource();
-			 String shape = (String)cb.getSelectedItem();
-		}
-	}
-
-	class ShapeLabelCheckBox implements MouseListener {
-		
-		@Override
-		public void mouseClicked(MouseEvent e) {
-
-			showShapeLabels=!showShapeLabels;
-			if(!showShapeLabels){
-				ui.getDrawPanel().paintAll(ui.getDrawPanel().getGraphics());
-			}
-			update();
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
 	class MenyItemSelectorListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if(selectedTool!=enumTools.SELECTION){
-				selectedTool=enumTools.SELECTION;
+			if(selectedTool!=tools.SELECTION){
+				selectedTool=tools.SELECTION;
+				ui.setLblSelectedTool("Marquee");
 			}else{
-				selectedTool=enumTools.NONE;
+				selectedTool=tools.NONE;
+				ui.setLblSelectedTool("none");
 			}
 		}
 	}

@@ -1,8 +1,12 @@
 package model;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JLabel;
+
 import controller.Observer;
 import controller.PaintController;
 
@@ -10,12 +14,14 @@ public class PaintModel implements PaintModelInterface {
 
 	private List<Shape> shapes;
 	private List<Observer> observers;
-	private Shape currentShape;
+	private Shape selectedShape;
 	private boolean activeSelection;
 	private PaintController paintController;
+	private int indexOfselectedShape;
 
 	public PaintModel(PaintController paintController) {
 
+		indexOfselectedShape=-1;
 		this.paintController=paintController;
 		shapes = new ArrayList<>();
 		observers = new ArrayList<>();
@@ -25,7 +31,6 @@ public class PaintModel implements PaintModelInterface {
 	@Override
 	public void addShape(Shape s) {
 		shapes.add(s);
-		currentShape = s;
 		notifyObservers();
 	}
 
@@ -48,10 +53,7 @@ public class PaintModel implements PaintModelInterface {
 		return shapes;
 	}
 
-	@Override
-	public Shape getCurrentShape() {
-		return currentShape;
-	}
+
 
 	@Override
 	public void resetDrawPanel() {
@@ -62,18 +64,46 @@ public class PaintModel implements PaintModelInterface {
 	@Override
 	public void selectShape(double x, double y) {
 
+		
+		
 		if (!activeSelection) {
-			int i=shapes.size() - 1;
-			for (; i >= 0; --i) {
-				if (shapes.get(i).getShape2D()
+			indexOfselectedShape=shapes.size() - 1;
+			for (; indexOfselectedShape >= 0; --indexOfselectedShape) {
+				if (shapes.get(indexOfselectedShape).getShape2D()
 						.contains(new Point2D.Double(x, y))) {
-					shapes.get(i).setSelected();
+					
+					System.out.println(shapes.get(indexOfselectedShape).getShape2D()
+							.contains(new Point2D.Double(x, y)));
+					
+					selectedShape = shapes.get(indexOfselectedShape);
+					selectedShape.setSelected();
+					activeSelection=true;
+					paintController.drawSelected();
 					break;
 				}
 			}
-			activeSelection=true;
-			paintController.drawSelected();
+			
+			
 		}
+	}
+
+	@Override
+	public int getIndexOfSelectedShape() {
+		
+		return indexOfselectedShape;
+	}
+
+	@Override
+	public void updateShape(Color c, int lineThickness,
+			boolean isFilled) {
+		
+		// skapa undo-objekt och spara undan lista eller 
+		shapes.get(indexOfselectedShape).updateShape(c, lineThickness, isFilled);
+		indexOfselectedShape=-1;
+		selectedShape=null;
+		activeSelection=false;
+		// 
+		notifyObservers();
 	}
 
 }

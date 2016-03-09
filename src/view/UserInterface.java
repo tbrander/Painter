@@ -24,11 +24,8 @@ import javax.swing.ImageIcon;
 import controller.PaintController;
 
 import javax.swing.JRadioButton;
-
-import java.awt.Checkbox;
-
-import javax.swing.JComboBox;
 import javax.swing.JRadioButtonMenuItem;
+import java.awt.Font;
 
 public class UserInterface extends JFrame {
 
@@ -38,19 +35,15 @@ public class UserInterface extends JFrame {
 	private JMenu file, mnOptions;
 	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo;
 	private JPanel contentPane, toolboxPanel, colorPanel, drawPanel;
-	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnSelect,	btnLine;
-	private JSlider sliderLineThickness, sliderShapeSize;
-	private JLabel lblLineThickness, lblShapeSize, lblSelectedTool;
+	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,	btnLine;
+	private JSlider sliderLineThickness;
+	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
 	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
 	private JRadioButtonMenuItem rdBtnItemSelect,rdBtnItemModify,rdBtnItemDelete;
-	private JComboBox shapeComboBox;
-	private Checkbox checkBoxShapeLabel;
 	
 	
 	
-	
-
 	public UserInterface() {
 		
 		setTitle("Labb2 Painter");
@@ -131,11 +124,11 @@ public class UserInterface extends JFrame {
 		btnTriangle.setBounds(61, 51, 41, 25);
 		toolboxPanel.add(btnTriangle);
 
-		btnSelect = new JButton("");
-		btnSelect.setToolTipText("Selection tool");
-		btnSelect.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\marker.jpg"));
-		btnSelect.setBounds(61, 88, 41, 25);
-		toolboxPanel.add(btnSelect);
+		btnArc = new JButton("");
+		btnArc.setToolTipText("Arc");
+		btnArc.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\arc.jpg"));
+		btnArc.setBounds(61, 88, 41, 25);
+		toolboxPanel.add(btnArc);
 
 		btnLine = new JButton("");
 		btnLine.setToolTipText("Line");
@@ -159,71 +152,53 @@ public class UserInterface extends JFrame {
 		colorPanel.setToolTipText("Line color");
 		colorPanel.setBackground(new Color(30, 144, 255));
 		colorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
-		colorPanel.setBounds(12, 335, 90, 95);
+		colorPanel.setBounds(12, 300, 90, 114);
 		toolboxPanel.add(colorPanel);
 
 		lblLineThickness = new JLabel("Line size: "+sliderLineThickness.getValue());
-		lblLineThickness.setBounds(12, 136, 90, 16);
+		lblLineThickness.setBounds(12, 135, 90, 16);
 		toolboxPanel.add(lblLineThickness);
 
 		JLabel lblColor = new JLabel("Color:");
-		lblColor.setBounds(12, 315, 90, 16);
+		lblColor.setBounds(12, 280, 90, 16);
 		toolboxPanel.add(lblColor);
 		
 		rdbtnOutline = new JRadioButton("Outline");
 		rdbtnOutline.setSelected(true);
-		rdbtnOutline.setBounds(12, 255, 71, 24);
+		rdbtnOutline.setBounds(12, 205, 71, 24);
 		toolboxPanel.add(rdbtnOutline);
 		
 		rdbtnFilled = new JRadioButton("Filled");
-		rdbtnFilled.setBounds(12, 283, 71, 24);
+		rdbtnFilled.setBounds(12, 233, 71, 24);
 		toolboxPanel.add(rdbtnFilled);
 		
 		ButtonGroup group = new ButtonGroup();
 	    group.add(rdbtnOutline);
 	    group.add(rdbtnFilled);
-	    
-	   
-	    
-	    sliderShapeSize = new JSlider();
-	    sliderShapeSize.setPaintTicks(true);
-	    sliderShapeSize.setMaximum(70);
-	    sliderShapeSize.setValue(55);
-	    sliderShapeSize.setToolTipText("Shape size");
-	    sliderShapeSize.setPaintLabels(true);
-	    sliderShapeSize.setMinorTickSpacing(5);
-	    sliderShapeSize.setMinimum(5);
-	    sliderShapeSize.setBounds(12, 216, 90, 26);
-	    toolboxPanel.add(sliderShapeSize);
-	    
-	    lblShapeSize = new JLabel("Shape size: "+sliderShapeSize.getValue());
-	    lblShapeSize.setBounds(12, 195, 90, 16);
-	    toolboxPanel.add(lblShapeSize);
-	    
-	    checkBoxShapeLabel = new Checkbox("Show labels");
-	    checkBoxShapeLabel.setBounds(12, 446, 101, 23);
-	    toolboxPanel.add(checkBoxShapeLabel);
-	    
-	    shapeComboBox = new JComboBox();
-	    shapeComboBox.setBounds(12, 479, 90, 25);
-	    toolboxPanel.add(shapeComboBox);
 
 		drawPanel = new JPanel();
 		drawPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 
 		drawPanel.setBackground(Color.WHITE);
 		drawPanel.setForeground(Color.BLACK);
-		drawPanel.setBounds(130, 23, 790, 523);
+		drawPanel.setBounds(130, 29, 790, 517);
 		contentPane.add(drawPanel);
 		
-		lblSelectedTool = new JLabel("Selected tool: Circle");
-		lblSelectedTool.setBounds(130, 0, 240, 16);
+		lblSelectedShape = new JLabel("Selected shape: None");
+		lblSelectedShape.setForeground(new Color(30, 144, 255));
+		lblSelectedShape.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+		lblSelectedShape.setBounds(130, 13, 225, 16);
+		contentPane.add(lblSelectedShape);
+		
+		lblSelectedTool = new JLabel("Selected tool: None");
+		lblSelectedTool.setForeground(new Color(30, 144, 255));
+		lblSelectedTool.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
+		lblSelectedTool.setBounds(352, 12, 202, 16);
 		contentPane.add(lblSelectedTool);
 		
 		paintController = new PaintController(this);
 		
 	}
-	
 	
 	public JPanel getDrawPanel(){
 		return drawPanel;
@@ -233,13 +208,6 @@ public class UserInterface extends JFrame {
 		return rdbtnFilled.isSelected();
 	}
 	
-	public int getShapeSize(){
-		
-		return sliderShapeSize.getValue();
-		
-	}
-	
-	
 	public void addPanelListeners(MouseListener addMouseListenerDrawPanel, MouseListener colorLinePanelListener) {
 		
 		drawPanel.addMouseListener(addMouseListenerDrawPanel);
@@ -247,15 +215,22 @@ public class UserInterface extends JFrame {
 		
 	}
 	
-	public void addButtonAndSlideListeners(ActionListener btnCircleListener, ActionListener btnLineListener, ActionListener btnRectangleListener, ActionListener btnSquareListener, ActionListener btnTriangleListener, ChangeListener lineThicknessSliderListener, ChangeListener shapeSizeSliderListener, ActionListener btnSelectListener){
+	public void addButtonAndSlideListeners(ActionListener btnCircleListener, ActionListener btnLineListener, ActionListener btnRectangleListener, ActionListener btnSquareListener, ActionListener btnTriangleListener, ChangeListener lineThicknessSliderListener, ActionListener btnArcListener){
 		btnCircle.addActionListener(btnCircleListener);
 		btnSquare.addActionListener(btnSquareListener);
 		btnLine.addActionListener(btnLineListener);
 		btnRectangle.addActionListener(btnRectangleListener);
 		btnTriangle.addActionListener(btnTriangleListener);
 		sliderLineThickness.addChangeListener(lineThicknessSliderListener);
-		sliderShapeSize.addChangeListener(shapeSizeSliderListener);
-		btnSelect.addActionListener(btnSelectListener);
+		btnArc.addActionListener(btnArcListener);
+		
+	}
+	
+	public void addMenyItemListeners(
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener) {
+		
+		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
+		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
 	}
 
 	public Color getColorPanelPaint() {
@@ -270,35 +245,15 @@ public class UserInterface extends JFrame {
 		return colorPanel;
 	}
 
-	public JLabel getlblShapeSize() {
-		return lblShapeSize;
-	}
-
 	public JLabel getLblLineThickness() {
 		return lblLineThickness;
 	}
 	
+	public void setLblSelectedShape(String currentShape){
+		lblSelectedShape.setText("Selected shape: "+currentShape);
+	}
+	
 	public void setLblSelectedTool(String currentTool){
 		lblSelectedTool.setText("Selected tool: "+currentTool);
-	}
-
-
-	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener) {
-		
-		
-		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
-		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
-		
-	}
-
-	public void addComponentListeners(MouseListener shapeLabelCheckBox) {
-
-		checkBoxShapeLabel.addMouseListener(shapeLabelCheckBox);
-		
-	}
-
-	public JComboBox getShapeComboBox() {
-		return shapeComboBox;
 	}
 }

@@ -8,21 +8,22 @@ import java.awt.geom.Rectangle2D;
 public class Square extends Shape {
 	
 
-	private double width, height;
+	private double width, height, pressedX, pressedY;
 	
-	public Square(double x, double y,double width, double height,  Color color, int strokeThickness,boolean isFilled) {
-		super(x, y, color, strokeThickness,isFilled);
-		this.width = width;
-		this.height = height;
-		setShapeLabel("Square_"+(++shapeCounter));
+	public Square(double pressedX, double pressedY,double x, double y, Color color, int strokeThickness,boolean isFilled) {
+		super(pressedX, pressedY, color, strokeThickness,isFilled);
+		this.width =  Math.min(Math.sqrt(Math.pow(x-pressedX, 2)), Math.sqrt(Math.pow(y-pressedY, 2)));
+		this.height =width;
+		this.pressedX=pressedX;
+		this.pressedY=pressedY;
 	}
 
 
 	@Override
 	protected void drawStep(Graphics2D g) {
 		if(super.isFilled())
-			g.fillRect((int)super.getX(),(int) super.getY(),(int) width,(int) height);
-		g.drawRect((int)super.getX(),(int) super.getY(),(int) width,(int) height);
+			g.fillRect((int)pressedX,(int) pressedY,(int) width,(int) height);
+		g.drawRect((int)pressedX,(int) pressedY,(int) width,(int) height);
 		
 	}
 
@@ -35,6 +36,11 @@ public class Square extends Shape {
 		return rect;
 	}
 
+	@Override
+	protected void updateShape(Color c, int lineThickness,
+			boolean isFilled) {
+		setShapeProperties(c, lineThickness, isFilled);
 
+	}
 
 }

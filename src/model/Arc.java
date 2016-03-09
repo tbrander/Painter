@@ -4,15 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 
-public class Rectangle extends Shape {
+public class Arc extends Shape {
 	
 
 	private double width, height, pressedX, pressedY;
 	
-	public Rectangle(double pressedX, double pressedY,double x, double y,  Color color, int strokeThickness, boolean isFilled) {
+	public Arc(double pressedX, double pressedY,double x, double y,  Color color, int strokeThickness, boolean isFilled) {
 		super(pressedX, pressedY, color, strokeThickness,isFilled);
-		this.width = Math.sqrt(Math.pow(x-pressedX, 2));
-		this.height = Math.sqrt(Math.pow(y-pressedY, 2));
+		this.width = Math.sqrt(Math.pow(pressedX-x, 2));
+		this.height = Math.sqrt(Math.pow(pressedY-y, 2));
 		this.pressedX=pressedX;
 		this.pressedY=pressedY;
 	}
@@ -22,17 +22,17 @@ public class Rectangle extends Shape {
 	protected void drawStep(Graphics2D g) {
 		
 		if(super.isFilled())
-			g.fillRect((int)pressedX,(int) pressedY,(int) width,(int) height);
-		g.drawRect((int)pressedX,(int) pressedY,(int) width,(int) height);
+			g.fillArc((int)pressedX,(int) pressedY,(int) width,(int) height, -90, 180);
+		g.drawArc((int)pressedX,(int) pressedY,(int) width,(int) height, -90, 180);
 		
 	}
 
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape rect = new Rectangle2D.Double(super.getX(),super.getY(),width,height);
+		java.awt.Shape arc = new Arc2D.Double(getX(), getY(), width, height,-90,180, Arc2D.CHORD);
 		
-		return rect;
+		return arc;
 	}
 	
 	@Override

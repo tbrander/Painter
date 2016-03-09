@@ -7,12 +7,13 @@ import java.awt.geom.Line2D.Double;
 
 public class Circle extends Shape {
 	
-	private double radius;
+	private double radius, pressedX, pressedY;
 	
-	public Circle(double x, double y,double radius,  Color color, int strokeThickness, boolean isFilled) {
-		super(x, y, color, strokeThickness, isFilled);
-		this.radius = radius;
-		setShapeLabel("Circle_"+(++shapeCounter));
+	public Circle(double pressedX, double pressedY, double x, double y,  Color color, int strokeThickness, boolean isFilled) {
+		super(pressedX, pressedY, color, strokeThickness, isFilled);
+		this.pressedX=pressedX;
+		this.pressedY=pressedY;
+		this.radius = Math.sqrt(Math.pow(x-pressedX, 2)+Math.pow(y-pressedY, 2));
 	}
 
 	@Override
@@ -20,9 +21,9 @@ public class Circle extends Shape {
 		
 		
 		if(super.isFilled()){
-			g.fillOval((int)getX(), (int)getY(), (int)radius, (int)radius);
+			g.fillOval((int)pressedX, (int)pressedY, (int)radius, (int)radius);
 		}
-		g.drawOval((int)getX(), (int)getY(), (int)radius, (int)radius);
+		g.drawOval((int)pressedX, (int)pressedY, (int)radius, (int)radius);
 	}
 
 	@Override
@@ -31,6 +32,12 @@ public class Circle extends Shape {
 		java.awt.Shape oval = new Ellipse2D.Double(getX(),getY(),radius,radius);
 		
 		return oval;
+	}
+
+	@Override
+	protected void updateShape(Color c, int lineThickness,
+			boolean isFilled) {
+		setShapeProperties(c, lineThickness, isFilled);
 	}
 	
 
