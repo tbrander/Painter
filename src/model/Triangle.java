@@ -8,21 +8,24 @@ import java.awt.geom.Rectangle2D;
 public class Triangle extends Shape {
 	
 	private int[] xPoa, yPoa;
-	private double pressedX,pressedY;
 	
-	public Triangle(double pressedX, double pressedY,double x, double y, Color color, int strokeThickness,
-			boolean isFilled) {
-		super(x, y, color, strokeThickness, isFilled);
-		this.pressedX=pressedX;
-		this.pressedY=pressedY;
+	
+	
+	public Triangle() {
+		super();
+	}
+
+	public Triangle(double x1, double y1, double x2, double y2,  Color color, int strokeThickness, boolean isFilled) {
+		super(x1, y1,x2,y2, color, strokeThickness, isFilled);
+
 	}
 
 	@Override
 	protected void drawStep(Graphics2D g) {
-		int middleX = (int) (getX()-(Math.abs(pressedX-getX())/2)), middleY=(int) (getY()-(Math.abs(pressedX-getY())/2));
+		int middleX = (int) (getX2()-(Math.abs(getX1()-getX2())/2)), middleY=(int) (getY2()-(Math.abs(getX1()-getY2())/2));
 		
-		int[] x = { (int) (getX()), (int) pressedX, middleX };
-		int[] y = { (int) getY(), (int) pressedY, (int)middleY };
+		int[] x = { (int) (getX2()), (int) getX1(), middleX };
+		int[] y = { (int) getY2(), (int) getY1(), (int)middleY };
 		
 		xPoa = x;
 		yPoa = y;
@@ -50,9 +53,20 @@ public class Triangle extends Shape {
 	}
 	
 	@Override
-	protected Shape copyShape() {
+	protected Shape copyToHistory() {
 		
-		return new Triangle(pressedX, pressedY, getX(), getY(), getColor(), getStrokeThickness(), isFilled());
+		return new Triangle(getX1(), getY1(), getX2(),getY2(), getColor(), getStrokeThickness(), isFilled());
+	}
+	
+	@Override
+	protected Shape clone() {
+		return new Triangle();
+	}
+
+	@Override
+	protected void defineDimensions() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

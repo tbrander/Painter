@@ -19,6 +19,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	private Undo undo;
 	private boolean activeSelection;
 	private int indexOfselectedShape;
+	private ShapeFactory avaliableShapes;
 
 	// ********** Observers ****************
 	private PaintController paintController;
@@ -28,6 +29,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	
 	public PaintModel(PaintController paintController) {
 
+		avaliableShapes = new ShapeFactory();
 		undo = new Undo();
 		indexOfselectedShape=-1;
 		this.paintController=paintController;
@@ -83,7 +85,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 				if (shapes.get(indexOfselectedShape).getShape2D()
 						.contains(new Point2D.Double(x, y))) {
 					
-					undo.addToHistory(shapes.get(indexOfselectedShape).copyShape(), indexOfselectedShape);
+					undo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
 					
 					selectedShape = shapes.get(indexOfselectedShape);
 					selectedShape.setSelected();
@@ -129,5 +131,13 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 		}
 		
 	}
+
+	@Override
+	public Shape makeShape(EnumShapes s,double x1, double y1, int x2, int y2,
+			Color color, int lineThickness, boolean isFilled) {
+		
+		return avaliableShapes.makeShape(s, x1, y1, x2, y2, color, lineThickness, isFilled);
+	}
+
 	
 }

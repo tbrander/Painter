@@ -28,24 +28,35 @@ import javax.swing.JRadioButtonMenuItem;
 
 import java.awt.Font;
 
+import javax.swing.JPopupMenu;
+
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserInterface extends JFrame {
 
 	private static final long serialVersionUID = -6596013991710495573L;
 
 	private JMenuBar menuBar;
-	private JMenu file, mnOptions;
+	private JMenu mnFile, mnOptions, mnShapes;
 	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo,mntmDelete;
 	private JPanel contentPane, toolboxPanel, colorPanel, drawPanel;
-	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,	btnLine;
+	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,btnLine;
 	private JSlider sliderLineThickness;
 	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
 	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
 	private JRadioButtonMenuItem rdBtnItemSelect;
+	private List<JMenuItem> shapeItemList;
 	
 	
 	
 	public UserInterface() {
+		
+		shapeItemList = new ArrayList<>();
 		
 		setTitle("Labb2 Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,18 +65,18 @@ public class UserInterface extends JFrame {
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		file = new JMenu("File");
-		menuBar.add(file);
+		mnFile = new JMenu("File");
+		menuBar.add(mnFile);
 
 		mntmLoad = new JMenuItem("Load");
-		file.add(mntmLoad);
+		mnFile.add(mntmLoad);
 
 		mntmSave = new JMenuItem("Save");
-		file.add(mntmSave);
+		mnFile.add(mntmSave);
 
 		mntmNewDocument = new JMenuItem("New document");
 
-		file.add(mntmNewDocument);
+		mnFile.add(mntmNewDocument);
 
 		mnOptions = new JMenu("Options");
 		menuBar.add(mnOptions);
@@ -85,6 +96,9 @@ public class UserInterface extends JFrame {
 		mntmDelete = new JMenuItem("delete");
 		mntmDelete.setEnabled(false);
 		mnTools.add(mntmDelete);
+		
+		mnShapes = new JMenu("Shapes");
+		menuBar.add(mnShapes);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -266,6 +280,5 @@ public class UserInterface extends JFrame {
 	public void setLblSelectedTool(String currentTool){
 		lblSelectedTool.setText("Selected tool: "+currentTool);
 	}
-	
-	
+
 }

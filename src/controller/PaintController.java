@@ -16,6 +16,7 @@ import javax.swing.event.ChangeListener;
 
 import model.Arc;
 import model.Circle;
+import model.EnumShapes;
 import model.Line;
 import model.PaintModel;
 import model.PaintModelInterface;
@@ -30,7 +31,7 @@ public class PaintController implements Observer {
 	private UserInterface ui;
 	private PaintModelInterface paintModel;
 	private Shape currentShape;
-	private tools currentShapeFlag;
+	private EnumShapes currentShapeFlag;
 	private tools selectedTool;
 	private double pressedX, pressedY, releasedX, releasedY;
 	
@@ -38,7 +39,7 @@ public class PaintController implements Observer {
 	public PaintController(UserInterface userInterface) {
 
 		selectedTool=tools.NONE;
-		currentShapeFlag = tools.NONE;
+		currentShapeFlag = EnumShapes.CIRCLE;
 		paintModel = new PaintModel(this); // :P
 		ui = userInterface;
 		ui.addPanelListeners(new AddMouseListenerDrawPanel(),
@@ -54,7 +55,7 @@ public class PaintController implements Observer {
 	}
 	
 	public enum tools {
-		 NONE, CIRCLE, SQUARE , RECTANGLE, TRIANGLE, LINE, ARC, SELECTION,DELETE;
+		 NONE, SELECTION,DELETE;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -85,42 +86,42 @@ public class PaintController implements Observer {
 	
 	class BtnCircleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.CIRCLE;
+			currentShapeFlag = EnumShapes.CIRCLE;
 			ui.setLblSelectedShape("Circle");
 		}
 	}
 
 	class BtnSquareListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.SQUARE;
+			currentShapeFlag = EnumShapes.SQUARE;
 			ui.setLblSelectedShape("Square");
 		}
 	}
 
 	class BtnRectangleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.RECTANGLE;
+			currentShapeFlag = EnumShapes.RECTANGLE;
 			ui.setLblSelectedShape("Rectangle");
 		}
 	}
 	
 	class BtnArcListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.ARC;
+			currentShapeFlag = EnumShapes.ARC;
 			ui.setLblSelectedShape("Arc");
 		}
 	}
 
 	class BtnTriangleListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.TRIANGLE;
+			currentShapeFlag = EnumShapes.TRIANGLE;
 			ui.setLblSelectedShape("Triangle");
 		}
 	}
 
 	class BtnLineListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			currentShapeFlag = tools.LINE;
+			currentShapeFlag = EnumShapes.LINE;
 			ui.setLblSelectedShape("Line");
 		}
 	}
@@ -213,13 +214,14 @@ public class PaintController implements Observer {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
-			boolean isFilled = ui.getRadioBtnOption();
-			Color color = ui.getColorPanelPaint();
-			int lineThickness = ui.getLineThickness();
-			
 			
 			
 			if(selectedTool==tools.SELECTION){
+				
+				boolean isFilled = ui.getRadioBtnOption();
+				Color color = ui.getColorPanelPaint();
+				int lineThickness = ui.getLineThickness();
+				
 				if(paintModel.getIndexOfSelectedShape() >=0){
 					paintModel.updateShape(color,lineThickness, isFilled);
 					ui.getRdBtnItemSelect().setSelected(false);
@@ -264,40 +266,10 @@ public class PaintController implements Observer {
 			int lineThickness = ui.getLineThickness();
 			
 			
-			switch (currentShapeFlag) {
-			case CIRCLE:
-				currentShape = new Circle(pressedX,pressedY,e.getX(), e.getY(), color,
-						lineThickness, isFilled);
-				break;
-			case SQUARE:
-				currentShape = new Square(pressedX,pressedY,e.getX(), e.getY(),
-						color, lineThickness, isFilled);
-				break;
-			case RECTANGLE:
-				currentShape = new Rectangle(pressedX,pressedY,e.getX(), e.getY(),
-						color, lineThickness, isFilled);
-				break;
-			case TRIANGLE:
-				
-				currentShape = new Triangle(pressedX, pressedY, e.getX(), e.getY(),
-						color, lineThickness, isFilled);
-				break;
-			case LINE:
-				currentShape = new Line(pressedX, pressedY,e.getX(), e.getY(), color, lineThickness);
-				break;
+			Shape newShape=paintModel.makeShape(currentShapeFlag,pressedX,pressedY,e.getX(), e.getY(), color,
+					lineThickness, isFilled);
 			
-			case ARC:
-				currentShape = new Arc(pressedX, pressedY, e.getX(), e.getY(), color, lineThickness,isFilled);
-				break;
-			case SELECTION: // temp case, kanske ska bort sen.
-				paintModel.selectShape(e.getX(), e.getY());
-				return;
-			default:
-				System.out.println("def");
-				return;
-			}
-			System.out.println("flag: "+currentShapeFlag);
-			paintModel.addShape(currentShape);
+			paintModel.addShape(newShape);
 		}
 	}
 

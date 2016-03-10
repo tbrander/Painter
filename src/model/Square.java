@@ -8,24 +8,28 @@ import java.awt.geom.Rectangle2D;
 public class Square extends Shape {
 	
 
-	private double width, height, pressedX, pressedY, x, y;
+	private double width, height;
 	
-	public Square(double pressedX, double pressedY,double x, double y, Color color, int strokeThickness,boolean isFilled) {
-		super(pressedX, pressedY, color, strokeThickness,isFilled);
-		this.width =  Math.min(Math.sqrt(Math.pow(x-pressedX, 2)), Math.sqrt(Math.pow(y-pressedY, 2)));
+	
+	
+	public Square() {
+		super();
+	}
+
+
+	public Square(double x1, double y1, double x2, double y2,  Color color, int strokeThickness, boolean isFilled) {
+		super(x1, y1,x2,y2, color, strokeThickness, isFilled);
+		this.width =  Math.min(Math.sqrt(Math.pow(x2-x1, 2)), Math.sqrt(Math.pow(y2-y1, 2)));
 		this.height =width;
-		this.pressedX=pressedX;
-		this.pressedY=pressedY;
-		this.x=x;
-		this.y=y;
+
 	}
 
 
 	@Override
 	protected void drawStep(Graphics2D g) {
 		if(super.isFilled())
-			g.fillRect((int)pressedX,(int) pressedY,(int) width,(int) height);
-		g.drawRect((int)pressedX,(int) pressedY,(int) width,(int) height);
+			g.fillRect((int)getX1(),(int) getY1(),(int) width,(int) height);
+		g.drawRect((int)getX1(),(int) getY1(),(int) width,(int) height);
 		
 	}
 
@@ -33,7 +37,7 @@ public class Square extends Shape {
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape rect = new Rectangle2D.Double(super.getX(),super.getY(),width,height);
+		java.awt.Shape rect = new Rectangle2D.Double(super.getX2(),super.getY2(),width,height);
 		
 		return rect;
 	}
@@ -47,7 +51,20 @@ public class Square extends Shape {
 
 	
 	@Override
-	protected Shape copyShape() {
-		return new Square(this.pressedX, this.pressedY, x, y, getColor(), getStrokeThickness(), isFilled());
+	protected Shape copyToHistory() {
+		return new Square(getX1(), getY1(), getX2(),getY2(), getColor(), getStrokeThickness(), isFilled());
+	}
+	
+	@Override
+	protected Shape clone() {
+		return new Square();
+	}
+
+
+	@Override
+	protected void defineDimensions() {
+		this.width =  Math.min(Math.sqrt(Math.pow(getX2()-getX1(), 2)), Math.sqrt(Math.pow(getY2()-getY1(), 2)));
+		this.height =width;
+		
 	}
 }

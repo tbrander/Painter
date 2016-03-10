@@ -7,16 +7,20 @@ import java.awt.geom.*;
 public class Rectangle extends Shape {
 	
 
-	private double width, height, pressedX, pressedY,x,y;
+	private double width, height;
 	
-	public Rectangle(double pressedX, double pressedY,double x, double y,  Color color, int strokeThickness, boolean isFilled) {
-		super(pressedX, pressedY, color, strokeThickness,isFilled);
-		this.width = Math.sqrt(Math.pow(x-pressedX, 2));
-		this.height = Math.sqrt(Math.pow(y-pressedY, 2));
-		this.pressedX=pressedX;
-		this.pressedY=pressedY;
-		this.x=x;
-		this.y=y;
+	
+	
+	public Rectangle() {
+		super();
+	}
+
+
+	public Rectangle(double x1, double y1, double x2, double y2,  Color color, int strokeThickness, boolean isFilled) {
+		super(x1, y1,x2,y2, color, strokeThickness, isFilled);
+		this.width = Math.sqrt(Math.pow(getX2()-getX1(), 2));
+		this.height = Math.sqrt(Math.pow(getY2()-getY1(), 2));
+
 	}
 
 
@@ -24,15 +28,15 @@ public class Rectangle extends Shape {
 	protected void drawStep(Graphics2D g) {
 		
 		if(super.isFilled())
-			g.fillRect((int)pressedX,(int) pressedY,(int) width,(int) height);
-		g.drawRect((int)pressedX,(int) pressedY,(int) width,(int) height);
+			g.fillRect((int)getX1(),(int) getY1(),(int) width,(int) height);
+		g.drawRect((int)getX1(),(int) getY1(),(int) width,(int) height);
 		
 	}
 
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape rect = new Rectangle2D.Double(super.getX(),super.getY(),width,height);
+		java.awt.Shape rect = new Rectangle2D.Double(super.getX2(),super.getY2(),width,height);
 		
 		return rect;
 	}
@@ -45,8 +49,21 @@ public class Rectangle extends Shape {
 	}
 
 	@Override
-	protected Shape copyShape() {
-		return new Rectangle(pressedX, pressedY, x,y, getColor(), getStrokeThickness(), isFilled());
+	protected Shape copyToHistory() {
+		return new Rectangle(getX1(), getY1(), getX2(),getY2(), getColor(), getStrokeThickness(), isFilled());
+	}
+	
+	@Override
+	protected Shape clone() {
+		return new Rectangle();
+	}
+
+
+	@Override
+	protected void defineDimensions() {
+		this.width = Math.sqrt(Math.pow(getX2()-getX1(), 2));
+		this.height = Math.sqrt(Math.pow(getY2()-getY1(), 2));
+		
 	}
 
 

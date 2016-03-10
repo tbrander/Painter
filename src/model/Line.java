@@ -6,24 +6,25 @@ import java.awt.geom.Line2D;
 
 public class Line extends Shape {
 	
-	private double x2, y2;
+	public Line() {
+		super();
+	}
+
+	public Line(double x1, double y1, double x2, double y2,  Color color, int strokeThickness, boolean isFilled) {
+		super(x1, y1,x2,y2, color, strokeThickness, isFilled);
 	
-	public Line(double x1, double y1,double x2, double y2, Color color, int strokeThickness) {
-		super(x1, y1, color, strokeThickness, false);
-		this.x2 = x2;
-		this.y2 = y2;
 	}
 
 	@Override
 	protected void drawStep(Graphics2D g) {
-		g.drawLine((int) (int) super.getX(),  (int) super.getY(), (int) x2,(int) y2);
+		g.drawLine((int) (int) super.getX1(),  (int) super.getY1(), (int) getX2(),(int) getY2());
 	}
 	
 	
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape line = new Line2D.Double(super.getX(),super.getY(),x2,y2);
+		java.awt.Shape line = new Line2D.Double(super.getX2(),super.getY2(),getX2(),getY2());
 		return line;
 	}
 
@@ -35,8 +36,19 @@ public class Line extends Shape {
 	}
 	
 	@Override
-	protected Shape copyShape() {
-		return new Line(x2, y2, getX(), getY(), getColor(), getStrokeThickness());
+	protected Shape copyToHistory() {
+		return new Line(getX1(), getY1(), getX2(),getY2(), getColor(), getStrokeThickness(), false);
+	}
+	
+	@Override
+	protected Shape clone() {
+		return new Line();
+	}
+
+	@Override
+	protected void defineDimensions() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
