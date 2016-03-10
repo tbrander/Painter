@@ -25,6 +25,7 @@ import controller.PaintController;
 
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
+
 import java.awt.Font;
 
 public class UserInterface extends JFrame {
@@ -33,14 +34,14 @@ public class UserInterface extends JFrame {
 
 	private JMenuBar menuBar;
 	private JMenu file, mnOptions;
-	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo;
+	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo,mntmDelete;
 	private JPanel contentPane, toolboxPanel, colorPanel, drawPanel;
 	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,	btnLine;
 	private JSlider sliderLineThickness;
 	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
 	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
-	private JRadioButtonMenuItem rdBtnItemSelect,rdBtnItemModify,rdBtnItemDelete;
+	private JRadioButtonMenuItem rdBtnItemSelect;
 	
 	
 	
@@ -48,7 +49,7 @@ public class UserInterface extends JFrame {
 		
 		setTitle("Labb2 Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 949, 628);
+		setBounds(100, 100, 943, 622);
 
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -78,14 +79,12 @@ public class UserInterface extends JFrame {
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
 		
-		rdBtnItemSelect = new JRadioButtonMenuItem("Select");
+		rdBtnItemSelect = new JRadioButtonMenuItem("select");
 		mnTools.add(rdBtnItemSelect);
 		
-		rdBtnItemModify = new JRadioButtonMenuItem("Modify");
-		mnTools.add(rdBtnItemModify);
-		
-		rdBtnItemDelete = new JRadioButtonMenuItem("Delete");
-		mnTools.add(rdBtnItemDelete);
+		mntmDelete = new JMenuItem("delete");
+		mntmDelete.setEnabled(false);
+		mnTools.add(mntmDelete);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -227,10 +226,11 @@ public class UserInterface extends JFrame {
 	}
 	
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener) {
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener) {
 		
 		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
 		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
+		mntmUndo.addActionListener(menyItemUndoListener);
 	}
 
 	public Color getColorPanelPaint() {
@@ -249,6 +249,16 @@ public class UserInterface extends JFrame {
 		return lblLineThickness;
 	}
 	
+	public JRadioButtonMenuItem getRdBtnItemSelect() {
+		return rdBtnItemSelect;
+	}
+	
+	
+
+	public JMenuItem getMntmDelete() {
+		return mntmDelete;
+	}
+
 	public void setLblSelectedShape(String currentShape){
 		lblSelectedShape.setText("Selected shape: "+currentShape);
 	}
@@ -256,4 +266,6 @@ public class UserInterface extends JFrame {
 	public void setLblSelectedTool(String currentTool){
 		lblSelectedTool.setText("Selected tool: "+currentTool);
 	}
+	
+	
 }

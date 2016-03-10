@@ -7,7 +7,7 @@ import java.awt.geom.*;
 public class Rectangle extends Shape {
 	
 
-	private double width, height, pressedX, pressedY;
+	private double width, height, pressedX, pressedY,x,y;
 	
 	public Rectangle(double pressedX, double pressedY,double x, double y,  Color color, int strokeThickness, boolean isFilled) {
 		super(pressedX, pressedY, color, strokeThickness,isFilled);
@@ -15,6 +15,8 @@ public class Rectangle extends Shape {
 		this.height = Math.sqrt(Math.pow(y-pressedY, 2));
 		this.pressedX=pressedX;
 		this.pressedY=pressedY;
+		this.x=x;
+		this.y=y;
 	}
 
 
@@ -42,7 +44,10 @@ public class Rectangle extends Shape {
 
 	}
 
-
+	@Override
+	protected Shape copyShape() {
+		return new Rectangle(pressedX, pressedY, x,y, getColor(), getStrokeThickness(), isFilled());
+	}
 
 
 }

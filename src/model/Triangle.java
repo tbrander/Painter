@@ -48,5 +48,11 @@ public class Triangle extends Shape {
 			boolean isFilled) {
 		setShapeProperties(c, lineThickness, isFilled);
 	}
+	
+	@Override
+	protected Shape copyShape() {
+		
+		return new Triangle(pressedX, pressedY, getX(), getY(), getColor(), getStrokeThickness(), isFilled());
+	}
 
 }

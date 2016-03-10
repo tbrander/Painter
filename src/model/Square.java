@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
 public class Square extends Shape {
 	
 
-	private double width, height, pressedX, pressedY;
+	private double width, height, pressedX, pressedY, x, y;
 	
 	public Square(double pressedX, double pressedY,double x, double y, Color color, int strokeThickness,boolean isFilled) {
 		super(pressedX, pressedY, color, strokeThickness,isFilled);
@@ -16,6 +16,8 @@ public class Square extends Shape {
 		this.height =width;
 		this.pressedX=pressedX;
 		this.pressedY=pressedY;
+		this.x=x;
+		this.y=y;
 	}
 
 
@@ -43,4 +45,9 @@ public class Square extends Shape {
 
 	}
 
+	
+	@Override
+	protected Shape copyShape() {
+		return new Square(this.pressedX, this.pressedY, x, y, getColor(), getStrokeThickness(), isFilled());
+	}
 }

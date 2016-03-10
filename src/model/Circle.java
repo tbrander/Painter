@@ -7,13 +7,15 @@ import java.awt.geom.Line2D.Double;
 
 public class Circle extends Shape {
 	
-	private double radius, pressedX, pressedY;
+	private double radius, pressedX, pressedY,x,y;
 	
 	public Circle(double pressedX, double pressedY, double x, double y,  Color color, int strokeThickness, boolean isFilled) {
 		super(pressedX, pressedY, color, strokeThickness, isFilled);
 		this.pressedX=pressedX;
 		this.pressedY=pressedY;
 		this.radius = Math.sqrt(Math.pow(x-pressedX, 2)+Math.pow(y-pressedY, 2));
+		this.x=x;
+		this.y=y;
 	}
 
 	@Override
@@ -38,6 +40,11 @@ public class Circle extends Shape {
 	protected void updateShape(Color c, int lineThickness,
 			boolean isFilled) {
 		setShapeProperties(c, lineThickness, isFilled);
+	}
+
+	@Override
+	protected Shape copyShape() {
+		return new Circle(pressedX, pressedY, x,y, getColor(), getStrokeThickness(), isFilled());
 	}
 	
 

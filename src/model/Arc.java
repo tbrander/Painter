@@ -7,7 +7,7 @@ import java.awt.geom.*;
 public class Arc extends Shape {
 	
 
-	private double width, height, pressedX, pressedY;
+	private double width, height, pressedX, pressedY,x,y;
 	
 	public Arc(double pressedX, double pressedY,double x, double y,  Color color, int strokeThickness, boolean isFilled) {
 		super(pressedX, pressedY, color, strokeThickness,isFilled);
@@ -15,6 +15,8 @@ public class Arc extends Shape {
 		this.height = Math.sqrt(Math.pow(pressedY-y, 2));
 		this.pressedX=pressedX;
 		this.pressedY=pressedY;
+		this.x=x;
+		this.y=y;
 	}
 
 
@@ -42,7 +44,10 @@ public class Arc extends Shape {
 
 	}
 
-
+	@Override
+	protected Shape copyShape() {
+		return new Arc(pressedX, pressedY, x,y, getColor(), getStrokeThickness(), isFilled());
+	}
 
 
 }

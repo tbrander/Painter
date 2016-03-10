@@ -54,9 +54,19 @@ public abstract class Shape {
 		this.strokeThickness=lineThickness;
 		this.isFilled=isFilled;
 	}
+
+	protected Color getColor() {
+		return color;
+	}
+	
 	
 
+	protected int getStrokeThickness() {
+		return strokeThickness;
+	}
 
+	abstract protected Shape copyShape();
+	
 	abstract protected void updateShape(Color c, int lineThickness, boolean isFilled);
 	
 	abstract protected java.awt.Shape getShape2D();

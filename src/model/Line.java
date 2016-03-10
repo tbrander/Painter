@@ -34,4 +34,9 @@ public class Line extends Shape {
 
 	}
 	
+	@Override
+	protected Shape copyShape() {
+		return new Line(x2, y2, getX(), getY(), getColor(), getStrokeThickness());
+	}
+	
 }
