@@ -35,7 +35,7 @@ public class Arc extends Shape {
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape arc = new Arc2D.Double(getX2(), getY2(), width, height,-90,180, Arc2D.CHORD);
+		java.awt.Shape arc = new Arc2D.Double(getX1(), getY1(), width, height,-90,180, Arc2D.CHORD);
 		
 		return arc;
 	}

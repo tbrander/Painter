@@ -35,7 +35,7 @@ public class Circle extends Shape {
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape oval = new Ellipse2D.Double(getX2(),getY2(),radius,radius);
+		java.awt.Shape oval = new Ellipse2D.Double(getX1(),getY1(),radius,radius);
 		
 		return oval;
 	}

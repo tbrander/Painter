@@ -12,12 +12,10 @@ public class ShapeFactory {
 	
 	public ShapeFactory(){
 		shapeMap = new HashMap<>();
-		shapeMap.put(EnumShapes.CIRCLE, new Circle()); // shapes.CIRCLE.getShape()
-		shapeMap.put(EnumShapes.ARC, new Arc());
-		shapeMap.put(EnumShapes.LINE, new Line());
-		shapeMap.put(EnumShapes.RECTANGLE, new Rectangle());
-		shapeMap.put(EnumShapes.SQUARE, new Square());
-		shapeMap.put(EnumShapes.TRIANGLE, new Triangle());
+		
+		for(int i = 0; i < EnumShapes.values().length; i++) {
+			shapeMap.put(EnumShapes.values()[i], EnumShapes.values()[i].getEnumShape()); // shapes.CIRCLE.getShape()
+		}
 		
 	}
 	

@@ -197,7 +197,7 @@ public class UserInterface extends JFrame {
 		drawPanel.setBounds(130, 29, 790, 517);
 		contentPane.add(drawPanel);
 		
-		lblSelectedShape = new JLabel("Selected shape: None");
+		lblSelectedShape = new JLabel("Selected shape: Circle");
 		lblSelectedShape.setForeground(new Color(30, 144, 255));
 		lblSelectedShape.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
 		lblSelectedShape.setBounds(130, 13, 225, 16);

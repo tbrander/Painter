@@ -215,9 +215,7 @@ public class PaintController implements Observer {
 		public void mouseClicked(MouseEvent e) {
 			
 			
-			
 			if(selectedTool==tools.SELECTION){
-				
 				boolean isFilled = ui.getRadioBtnOption();
 				Color color = ui.getColorPanelPaint();
 				int lineThickness = ui.getLineThickness();
@@ -234,8 +232,6 @@ public class PaintController implements Observer {
 			}else if(selectedTool==tools.DELETE){
 				
 			}
-
-			
 		}
 
 		@Override

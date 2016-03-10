@@ -37,7 +37,7 @@ public class Square extends Shape {
 	@Override
 	protected java.awt.Shape getShape2D() {
 
-		java.awt.Shape rect = new Rectangle2D.Double(super.getX2(),super.getY2(),width,height);
+		java.awt.Shape rect = new Rectangle2D.Double(super.getX1(),super.getY1(),width,height);
 		
 		return rect;
 	}
