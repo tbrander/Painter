@@ -48,6 +48,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void addShape(Shape s) {
 		shapes.add(s);
 		undo.addToHistory(null, shapes.size()-1);
+		
 		setChanged();
 		notifyObservers();
 	}
@@ -137,6 +138,24 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 			Color color, int lineThickness, boolean isFilled) {
 		
 		return avaliableShapes.makeShape(s, x1, y1, x2, y2, color, lineThickness, isFilled);
+	}
+
+	@Override
+	public void delete() {
+		
+		undo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
+		shapes.remove(indexOfselectedShape);
+		shapes.add(indexOfselectedShape, null);
+		indexOfselectedShape=-1;
+		selectedShape=null;
+		activeSelection=false;
+		setChanged();
+		notifyObservers();
+	}
+
+	@Override
+	public void redo() {
+		
 	}
 
 	

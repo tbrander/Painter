@@ -6,7 +6,6 @@ public class Undo {
 	
 	private Stack<UndoInterface> undoStack;
 	
-	
 	public Undo(){
 		undoStack = new Stack<>();
 	}
@@ -14,13 +13,17 @@ public class Undo {
 	protected void addToHistory(Shape s, int indexOfselectedShape) {
 	
 		undoStack.push(new UndoObject(s, indexOfselectedShape)); 
-		System.out.println("stack: "+undoStack.size());
 		
 	}
 	
 	protected UndoInterface undoChange(){
+		System.out.println("Undostack: "+undoStack.size());
 		
-		return undoStack.pop();
+		UndoInterface u =undoStack.pop();
+		
+		return u;
 	}
+	
+
 	
 }

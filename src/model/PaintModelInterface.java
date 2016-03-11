@@ -18,5 +18,7 @@ public interface PaintModelInterface {
 	void updateShape(Color background, int lineThickness,boolean radioBtnOption);
 	void undo();
 	Shape makeShape(EnumShapes shape, double pressedX, double pressedY, int i, int j, Color color, int lineThickness, boolean isFilled);
+	void delete();
+	void redo();
 
 }

@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JColorChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,30 +32,46 @@ public class PaintController implements Observer {
 
 	private UserInterface ui;
 	private PaintModelInterface paintModel;
-	private Shape currentShape;
 	private EnumShapes currentShapeFlag;
 	private tools selectedTool;
-	private double pressedX, pressedY, releasedX, releasedY;
+	private double pressedX, pressedY;
+	private List<ShapeMenuItems> listeners;
 	
-
 	public PaintController(UserInterface userInterface) {
 
 		selectedTool=tools.NONE;
 		currentShapeFlag = EnumShapes.CIRCLE;
 		paintModel = new PaintModel(this); // :P
 		ui = userInterface;
+		
+		listeners = new ArrayList<>();
+		listeners.add(new BtnCircleListener());
+		listeners.add(new BtnLineListener());
+		listeners.add(new BtnRectangleListener());
+		listeners.add(new BtnSquareListener());
+		listeners.add(new BtnTriangleListener());
+		listeners.add(new BtnArcListener());
+		initializeShapeMenuItems();
+		
+		
 		ui.addPanelListeners(new AddMouseListenerDrawPanel(),
 				new ColorLinePanelListener());
 
-		ui.addButtonAndSlideListeners(new BtnCircleListener(),
-				new BtnLineListener(), new BtnRectangleListener(),
-				new BtnSquareListener(), new BtnTriangleListener(),
-				new LineThicknessSliderListener(), new BtnArcListener());
-
-		ui.addMenyItemListeners(new MenyItemNewDocListener(), new MenyItemSelectorListener(), new MenyItemUndoListener());
+		ui.addMenyItemListeners(new MenyItemNewDocListener(), new MenyItemSelectorListener(), new MenyItemUndoListener(), new LineThicknessSliderListener(),new MenyItemDeleteListener(),new MenyItemRedoListener());
 		
 	}
 	
+	private void initializeShapeMenuItems(){
+		for(int i=0;i<EnumShapes.values().length;++i){
+			for(int j=0;j < EnumShapes.values().length;++j){
+				if(listeners.get(i).getType().equals(EnumShapes.values()[j])){					
+					ui.addButtonAndSlideListeners((ActionListener) listeners.get(i), EnumShapes.values()[j].toString());
+					
+				}
+			}
+		}
+	}
+
 	public enum tools {
 		 NONE, SELECTION,DELETE;
 	}
@@ -63,15 +81,14 @@ public class PaintController implements Observer {
 	public void update(Observable o, Object arg) {
 		List<Shape> shapeList = (List<Shape>) arg;
 		
-		System.out.println(shapeList.size());
 		ui.getDrawPanel().paintAll(ui.getDrawPanel().getGraphics());
 		
 		for (Shape s : shapeList) {
-			s.draw(ui.getDrawPanel().getGraphics());
+			if(s!=null)
+				s.draw(ui.getDrawPanel().getGraphics());
 		}
 		
 	}
-	
 	
 	public void drawSelected() {
 		for (Shape s : paintModel.getShapeList()) {
@@ -84,45 +101,72 @@ public class PaintController implements Observer {
 
 	// ***************  Btn listeners **************** //
 	
-	class BtnCircleListener implements ActionListener {
+	class BtnCircleListener extends ShapeMenuItems implements ActionListener {
+		
+		
+		
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.CIRCLE;
 			ui.setLblSelectedShape("Circle");
 		}
+		@Override
+		public EnumShapes getType(){
+			return EnumShapes.CIRCLE;
+		}
 	}
 
-	class BtnSquareListener implements ActionListener {
+	class BtnSquareListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.SQUARE;
 			ui.setLblSelectedShape("Square");
 		}
+		
+		public EnumShapes getType(){
+			return EnumShapes.SQUARE;
+		}
 	}
 
-	class BtnRectangleListener implements ActionListener {
+	class BtnRectangleListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.RECTANGLE;
 			ui.setLblSelectedShape("Rectangle");
 		}
+		
+		public EnumShapes getType(){
+			return EnumShapes.RECTANGLE;
+		}
 	}
 	
-	class BtnArcListener implements ActionListener {
+	class BtnArcListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.ARC;
 			ui.setLblSelectedShape("Arc");
 		}
+		
+		public EnumShapes getType(){
+			return EnumShapes.ARC;
+		}
 	}
 
-	class BtnTriangleListener implements ActionListener {
+	class BtnTriangleListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.TRIANGLE;
 			ui.setLblSelectedShape("Triangle");
 		}
+		
+		public EnumShapes getType(){
+			return EnumShapes.TRIANGLE;
+		}
 	}
 
-	class BtnLineListener implements ActionListener {
+	class BtnLineListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.LINE;
 			ui.setLblSelectedShape("Line");
+		}
+		
+		public EnumShapes getType(){
+			return EnumShapes.LINE;
 		}
 	}
 	
@@ -157,6 +201,21 @@ public class PaintController implements Observer {
 			paintModel.undo();
 		}
 	}
+	
+	class MenyItemRedoListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			paintModel.redo();
+		}
+	}
+	
+	class MenyItemDeleteListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			paintModel.delete();
+		}
+	}
+	
 	
 	// **************** Other listeners ******************* //
 	

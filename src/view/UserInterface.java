@@ -26,13 +26,9 @@ import controller.PaintController;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 
+import model.EnumShapes;
+
 import java.awt.Font;
-
-import javax.swing.JPopupMenu;
-
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +46,14 @@ public class UserInterface extends JFrame {
 	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
 	private JRadioButtonMenuItem rdBtnItemSelect;
-	private List<JMenuItem> shapeItemList;
-	
+	private List<JRadioButtonMenuItem> shapeItemList;
 	
 	
 	public UserInterface() {
 		
 		shapeItemList = new ArrayList<>();
 		
-		setTitle("Labb2 Painter");
+		setTitle("Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 943, 622);
 
@@ -98,6 +93,7 @@ public class UserInterface extends JFrame {
 		mnTools.add(mntmDelete);
 		
 		mnShapes = new JMenu("Shapes");
+		
 		menuBar.add(mnShapes);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -210,8 +206,8 @@ public class UserInterface extends JFrame {
 		contentPane.add(lblSelectedTool);
 		
 		paintController = new PaintController(this);
-		
 	}
+	
 	
 	public JPanel getDrawPanel(){
 		return drawPanel;
@@ -228,23 +224,24 @@ public class UserInterface extends JFrame {
 		
 	}
 	
-	public void addButtonAndSlideListeners(ActionListener btnCircleListener, ActionListener btnLineListener, ActionListener btnRectangleListener, ActionListener btnSquareListener, ActionListener btnTriangleListener, ChangeListener lineThicknessSliderListener, ActionListener btnArcListener){
-		btnCircle.addActionListener(btnCircleListener);
-		btnSquare.addActionListener(btnSquareListener);
-		btnLine.addActionListener(btnLineListener);
-		btnRectangle.addActionListener(btnRectangleListener);
-		btnTriangle.addActionListener(btnTriangleListener);
-		sliderLineThickness.addChangeListener(lineThicknessSliderListener);
-		btnArc.addActionListener(btnArcListener);
+	public void addButtonAndSlideListeners(ActionListener btnListener, String label){
 		
+		JMenuItem jm = new JMenuItem(label);
+		jm.addActionListener(btnListener);
+		mnShapes.add(jm);
 	}
 	
+	
+	
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener) {
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener) {
 		
 		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
 		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
 		mntmUndo.addActionListener(menyItemUndoListener);
+		sliderLineThickness.addChangeListener(lineThicknessSliderListener);
+		mntmDelete.addActionListener(menyItemDeleteListener);
+		mntmRedo.addActionListener(menyItemRedoListener);
 	}
 
 	public Color getColorPanelPaint() {
@@ -280,5 +277,11 @@ public class UserInterface extends JFrame {
 	public void setLblSelectedTool(String currentTool){
 		lblSelectedTool.setText("Selected tool: "+currentTool);
 	}
+	
+	public JMenu getShapeJMenu(){
+		return mnShapes;
+	}
+	
+	
 
 }
