@@ -17,6 +17,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 
 	private Shape selectedShape;
 	private Undo undo;
+	private Redo redo;
 	private boolean activeSelection;
 	private int indexOfselectedShape;
 	private ShapeFactory avaliableShapes;
@@ -31,6 +32,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 
 		avaliableShapes = new ShapeFactory();
 		undo = new Undo();
+		redo = new Redo();
 		indexOfselectedShape=-1;
 		this.paintController=paintController;
 		shapes = new ArrayList<>();
@@ -48,7 +50,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void addShape(Shape s) {
 		shapes.add(s);
 		undo.addToHistory(null, shapes.size()-1);
-		
+		redo.addToHistory(s.copyToHistory(), shapes.size()-1);
 		setChanged();
 		notifyObservers();
 	}
@@ -109,6 +111,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 			boolean isFilled) {
 		
 		shapes.get(indexOfselectedShape).updateShape(c, lineThickness, isFilled);
+		redo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
 		indexOfselectedShape=-1;
 		selectedShape=null;
 		activeSelection=false;
@@ -120,6 +123,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void undo(){
 		try{
 		UndoInterface u=undo.undoChange();
+		
 		shapes.remove(u.getIndex());
 		if(u.undo()!=null)
 			shapes.add(u.getIndex(), u.undo());
@@ -155,7 +159,17 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 
 	@Override
 	public void redo() {
+		try{
+			RedoInterface u=redo.redoChange();
 		
+			shapes.add(u.redo());
+			
+			setChanged();
+			notifyObservers();
+			
+			}catch(EmptyStackException e){
+				System.out.println("Error: empty stack!");
+			}
 	}
 
 	

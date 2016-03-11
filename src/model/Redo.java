@@ -17,7 +17,7 @@ public class Redo {
 		
 	}
 	
-	protected RedoInterface undoChange(){
+	protected RedoInterface redoChange(){
 		
 		return redoStack.pop();
 	}
