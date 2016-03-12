@@ -5,14 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.JColorChooser;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import model.EnumShapes;
 import model.PaintModel;
 import model.PaintModelInterface;
@@ -50,7 +53,7 @@ public class PaintController implements Observer {
 		ui.addMenyItemListeners(new MenyItemNewDocListener(),
 				new MenyItemSelectorListener(), new MenyItemUndoListener(),
 				new LineThicknessSliderListener(),
-				new MenyItemDeleteListener(), new MenyItemRedoListener(), new MenyItemSaveListener());
+				new MenyItemDeleteListener(), new MenyItemRedoListener(), new MenyItemSaveListener(), new MenyItemLoadListener());
 
 	}
 
@@ -219,14 +222,33 @@ public class PaintController implements Observer {
 			int rVal = ui.getJFileChooser().showSaveDialog(ui);
 			if (rVal == ui.getJFileChooser().APPROVE_OPTION) {
 				filename= ui.getJFileChooser().getSelectedFile().getName();
-				path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename+".draw");
+				if(!filename.contains(".draw")){
+					filename=filename.concat(".draw");
+				}
+				path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename);
 				paintModel.saveToFile(path);
 			}
-			if (rVal == ui.getJFileChooser().CANCEL_OPTION) {
-				System.out.println("Cancle");
-				return;
-			}
 		}
+	}
+	
+	class MenyItemLoadListener implements ActionListener {
+
+		private String filename, path;
+		
+		public void actionPerformed(ActionEvent e) {
+	      // Demonstrate "Open" dialog:
+	      int rVal = ui.getJFileChooser().showOpenDialog(ui);
+	      if (rVal == ui.getJFileChooser().APPROVE_OPTION) {
+	    	  filename=(ui.getJFileChooser().getSelectedFile().getName());
+	    	  path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename);
+	    	  try {
+				paintModel.loadFromFile(path);
+			} catch (FileNotFoundException e1) {
+				ui.showErrorDialog("File not found!");
+				e1.printStackTrace();
+			}
+	      }
+	    }
 	}
 
 	// **************** Other listeners ******************* //

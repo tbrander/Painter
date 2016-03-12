@@ -1,6 +1,7 @@
 package model;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class SaveLoadDrawings {
 
-
-	synchronized protected static void saveToFile(List<Shape> list, String toPath) {
+	synchronized protected static void saveToFile(List<Shape> list,
+			String toPath) {
 
 		FileOutputStream fOut = null;
 		ObjectOutputStream oOut = null;
@@ -35,20 +36,31 @@ public class SaveLoadDrawings {
 	}
 
 	@SuppressWarnings("unchecked")
-	synchronized protected static List<Shape> readFromFile(String fromPath) throws IOException {
+	synchronized protected static List<Shape> loadFromFile(String fromPath)	throws FileNotFoundException {
 
+		// throws FileNotFoundException
 		FileInputStream fileInputStream = new FileInputStream(fromPath);
-		ObjectInputStream input = new ObjectInputStream(fileInputStream);
+		
+		ObjectInputStream input = null;
 		List<Shape> shapes = null;
+
 		try {
+			input = new ObjectInputStream(fileInputStream);
 			shapes = (List<Shape>) input.readObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			input.close();
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
 
 		return shapes;
 

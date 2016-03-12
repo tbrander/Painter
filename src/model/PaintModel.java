@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
@@ -176,6 +177,16 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void saveToFile(String toPath) {
 		
 		SaveLoadDrawings.saveToFile(shapes, toPath);
+		
+	}
+
+	@Override
+	public void loadFromFile(String fromPath) throws FileNotFoundException {
+		shapes.clear();
+		shapes.addAll(SaveLoadDrawings.loadFromFile(fromPath));
+		
+		setChanged();
+		notifyObservers();
 		
 	}
 

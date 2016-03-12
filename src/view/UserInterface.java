@@ -13,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 
@@ -20,6 +21,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ImageIcon;
 
 import controller.PaintController;
@@ -37,7 +40,6 @@ public class UserInterface extends JFrame {
 	private JMenu mnFile, mnOptions, mnShapes;
 	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo,mntmDelete;
 	private JPanel contentPane, toolboxPanel, colorPanel, drawPanel;
-	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,btnLine;
 	private JSlider sliderLineThickness;
 	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
@@ -48,7 +50,8 @@ public class UserInterface extends JFrame {
 	public UserInterface() {
 		
 		jFile = new JFileChooser();
-		
+		FileFilter filter = new FileNameExtensionFilter("Draw file","draw");
+		jFile.setFileFilter(filter);
 		setTitle("Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 943, 622);
@@ -102,45 +105,6 @@ public class UserInterface extends JFrame {
 		contentPane.add(toolboxPanel);
 		toolboxPanel.setLayout(null);
 
-		btnCircle = new JButton("");
-		btnCircle.setToolTipText("Circle");
-		btnCircle.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\circle.jpg"));
-		btnCircle.setBounds(12, 13, 41, 25);
-		toolboxPanel.add(btnCircle);
-
-		btnSquare = new JButton("");
-
-		btnSquare.setToolTipText("Square");
-		btnSquare.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\square.jpg"));
-		btnSquare.setBounds(61, 13, 41, 25);
-		toolboxPanel.add(btnSquare);
-
-		btnRectangle = new JButton("");
-		btnRectangle.setToolTipText("Rectangle");
-		btnRectangle.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\rectangle.jpg"));
-
-
-		btnRectangle.setBounds(12, 51, 41, 25);
-		toolboxPanel.add(btnRectangle);
-
-		btnTriangle = new JButton("");
-		btnTriangle.setToolTipText("Triangle");
-		btnTriangle.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\triangle.jpg"));
-		btnTriangle.setBounds(61, 51, 41, 25);
-		toolboxPanel.add(btnTriangle);
-
-		btnArc = new JButton("");
-		btnArc.setToolTipText("Arc");
-		btnArc.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\arc.jpg"));
-		btnArc.setBounds(61, 88, 41, 25);
-		toolboxPanel.add(btnArc);
-
-		btnLine = new JButton("");
-		btnLine.setToolTipText("Line");
-		btnLine.setIcon(new ImageIcon("C:\\Users\\Thomas\\workspace\\HI2011_Lab2\\src\\img\\line.jpg"));
-		btnLine.setBounds(12, 88, 41, 25);
-		toolboxPanel.add(btnLine);
-
 		sliderLineThickness = new JSlider();
 		sliderLineThickness.setMinimum(1);
 		sliderLineThickness.setToolTipText("Line thickness");
@@ -150,31 +114,31 @@ public class UserInterface extends JFrame {
 		sliderLineThickness.setSnapToTicks(true);
 		sliderLineThickness.setPaintLabels(true);
 		sliderLineThickness.setMinorTickSpacing(1);
-		sliderLineThickness.setBounds(12, 157, 90, 26);
+		sliderLineThickness.setBounds(12, 54, 90, 26);
 		toolboxPanel.add(sliderLineThickness);
 
 		colorPanel = new JPanel();
 		colorPanel.setToolTipText("Line color");
 		colorPanel.setBackground(new Color(30, 144, 255));
 		colorPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
-		colorPanel.setBounds(12, 300, 90, 114);
+		colorPanel.setBounds(12, 197, 90, 114);
 		toolboxPanel.add(colorPanel);
 
 		lblLineThickness = new JLabel("Line size: "+sliderLineThickness.getValue());
-		lblLineThickness.setBounds(12, 135, 90, 16);
+		lblLineThickness.setBounds(12, 32, 90, 16);
 		toolboxPanel.add(lblLineThickness);
 
 		JLabel lblColor = new JLabel("Color:");
-		lblColor.setBounds(12, 280, 90, 16);
+		lblColor.setBounds(12, 177, 90, 16);
 		toolboxPanel.add(lblColor);
 		
 		rdbtnOutline = new JRadioButton("Outline");
 		rdbtnOutline.setSelected(true);
-		rdbtnOutline.setBounds(12, 205, 71, 24);
+		rdbtnOutline.setBounds(12, 102, 71, 24);
 		toolboxPanel.add(rdbtnOutline);
 		
 		rdbtnFilled = new JRadioButton("Filled");
-		rdbtnFilled.setBounds(12, 233, 71, 24);
+		rdbtnFilled.setBounds(12, 130, 71, 24);
 		toolboxPanel.add(rdbtnFilled);
 		
 		ButtonGroup group = new ButtonGroup();
@@ -231,7 +195,7 @@ public class UserInterface extends JFrame {
 	
 	
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener, ActionListener menyItemSaveListener) {
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener, ActionListener menyItemSaveListener, ActionListener menyItemLoadListener) {
 		
 		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
 		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
@@ -240,6 +204,7 @@ public class UserInterface extends JFrame {
 		mntmDelete.addActionListener(menyItemDeleteListener);
 		mntmRedo.addActionListener(menyItemRedoListener);
 		mntmSave.addActionListener(menyItemSaveListener);
+		mntmLoad.addActionListener(menyItemLoadListener);
 	}
 
 	public Color getColorPanelPaint() {
@@ -282,6 +247,10 @@ public class UserInterface extends JFrame {
 	
 	public JFileChooser getJFileChooser(){
 		return jFile;
+	}
+	
+	public void showErrorDialog(String msg){
+		JOptionPane.showMessageDialog(this, msg);
 	}
 	
 
