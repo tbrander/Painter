@@ -38,23 +38,25 @@ public class UserInterface extends JFrame {
 
 	private JMenuBar menuBar;
 	private JMenu mnFile, mnOptions, mnShapes;
-	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo,mntmDelete;
+	private JMenuItem mntmLoad, mntmSave, mntmNewDocument, mntmUndo, mntmRedo,
+			mntmDelete;
 	private JPanel contentPane, toolboxPanel, colorPanel, drawPanel;
 	private JSlider sliderLineThickness;
 	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
 	private JRadioButtonMenuItem rdBtnItemSelect;
 	private JFileChooser jFile;
-	
-	
+	private ButtonGroup shapeGroup;
+
 	public UserInterface() {
-		
+
 		jFile = new JFileChooser();
-		FileFilter filter = new FileNameExtensionFilter("Draw file","draw");
+		FileFilter filter = new FileNameExtensionFilter("Draw file", "draw");
 		jFile.setFileFilter(filter);
+
 		setTitle("Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 943, 622);
+		setBounds(100, 100, 938, 615);
 
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -80,19 +82,19 @@ public class UserInterface extends JFrame {
 
 		mntmRedo = new JMenuItem("Redo");
 		mnOptions.add(mntmRedo);
-		
+
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
-		
+
 		rdBtnItemSelect = new JRadioButtonMenuItem("select");
 		mnTools.add(rdBtnItemSelect);
-		
+
 		mntmDelete = new JMenuItem("delete");
 		mntmDelete.setEnabled(false);
 		mnTools.add(mntmDelete);
-		
+
 		mnShapes = new JMenu("Shapes");
-		
+
 		menuBar.add(mnShapes);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -100,7 +102,8 @@ public class UserInterface extends JFrame {
 		contentPane.setLayout(null);
 
 		toolboxPanel = new JPanel();
-		toolboxPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
+		toolboxPanel
+				.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 		toolboxPanel.setBounds(0, 0, 118, 546);
 		contentPane.add(toolboxPanel);
 		toolboxPanel.setLayout(null);
@@ -124,79 +127,88 @@ public class UserInterface extends JFrame {
 		colorPanel.setBounds(12, 197, 90, 114);
 		toolboxPanel.add(colorPanel);
 
-		lblLineThickness = new JLabel("Line size: "+sliderLineThickness.getValue());
+		lblLineThickness = new JLabel("Line size: "
+				+ sliderLineThickness.getValue());
 		lblLineThickness.setBounds(12, 32, 90, 16);
 		toolboxPanel.add(lblLineThickness);
 
 		JLabel lblColor = new JLabel("Color:");
 		lblColor.setBounds(12, 177, 90, 16);
 		toolboxPanel.add(lblColor);
-		
+
 		rdbtnOutline = new JRadioButton("Outline");
 		rdbtnOutline.setSelected(true);
 		rdbtnOutline.setBounds(12, 102, 71, 24);
 		toolboxPanel.add(rdbtnOutline);
-		
+
 		rdbtnFilled = new JRadioButton("Filled");
 		rdbtnFilled.setBounds(12, 130, 71, 24);
 		toolboxPanel.add(rdbtnFilled);
-		
+
 		ButtonGroup group = new ButtonGroup();
-	    group.add(rdbtnOutline);
-	    group.add(rdbtnFilled);
+		group.add(rdbtnOutline);
+		group.add(rdbtnFilled);
+		shapeGroup = new ButtonGroup();
 
 		drawPanel = new JPanel();
 		drawPanel.setBorder(new LineBorder(new Color(105, 105, 105), 1, true));
 
 		drawPanel.setBackground(Color.WHITE);
 		drawPanel.setForeground(Color.BLACK);
-		drawPanel.setBounds(130, 29, 790, 517);
+		drawPanel.setBounds(121, 29, 799, 517);
 		contentPane.add(drawPanel);
-		
+
 		lblSelectedShape = new JLabel("Selected shape: Circle");
 		lblSelectedShape.setForeground(new Color(30, 144, 255));
 		lblSelectedShape.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
 		lblSelectedShape.setBounds(130, 13, 225, 16);
 		contentPane.add(lblSelectedShape);
-		
+
 		lblSelectedTool = new JLabel("Selected tool: None");
 		lblSelectedTool.setForeground(new Color(30, 144, 255));
 		lblSelectedTool.setFont(new Font("Segoe UI Emoji", Font.BOLD, 14));
 		lblSelectedTool.setBounds(352, 12, 202, 16);
 		contentPane.add(lblSelectedTool);
-		
+
 		@SuppressWarnings("unused")
 		PaintController paintController = new PaintController(this);
 	}
-	
-	
-	public JPanel getDrawPanel(){
+
+	public JPanel getDrawPanel() {
 		return drawPanel;
 	}
-	
-	public boolean getRadioBtnOption(){
+
+	public boolean getRadioBtnOption() {
 		return rdbtnFilled.isSelected();
 	}
-	
-	public void addPanelListeners(MouseListener addMouseListenerDrawPanel, MouseListener colorLinePanelListener) {
-		
+
+	public void addPanelListeners(MouseListener addMouseListenerDrawPanel,
+			MouseListener colorLinePanelListener) {
+
 		drawPanel.addMouseListener(addMouseListenerDrawPanel);
 		colorPanel.addMouseListener(colorLinePanelListener);
-		
+
 	}
-	
-	public void addButtonAndSlideListeners(ActionListener btnListener, String label){
-		
-		JMenuItem jm = new JMenuItem(label);
+
+	public void addButtonAndSlideListeners(ActionListener btnListener,
+			String label) {
+
+		JRadioButtonMenuItem jm = new JRadioButtonMenuItem(label);
 		jm.addActionListener(btnListener);
 		mnShapes.add(jm);
+		shapeGroup.add(jm);
 	}
-	
-	
-	
+
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener, ActionListener menyItemSaveListener, ActionListener menyItemLoadListener) {
-		
+			ActionListener addMouseListenerFileMenyItemNewDoc,
+			ActionListener menyItemSelectorListener,
+			ActionListener menyItemUndoListener,
+			ChangeListener lineThicknessSliderListener,
+			ActionListener menyItemDeleteListener,
+			ActionListener menyItemRedoListener,
+			ActionListener menyItemSaveListener,
+			ActionListener menyItemLoadListener) {
+
 		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
 		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
 		mntmUndo.addActionListener(menyItemUndoListener);
@@ -222,36 +234,34 @@ public class UserInterface extends JFrame {
 	public JLabel getLblLineThickness() {
 		return lblLineThickness;
 	}
-	
+
 	public JRadioButtonMenuItem getRdBtnItemSelect() {
 		return rdBtnItemSelect;
 	}
-	
-	
 
 	public JMenuItem getMntmDelete() {
 		return mntmDelete;
 	}
+	
 
-	public void setLblSelectedShape(String currentShape){
-		lblSelectedShape.setText("Selected shape: "+currentShape);
+	public void setLblSelectedShape(String currentShape) {
+		lblSelectedShape.setText("Selected shape: " + currentShape);
 	}
-	
-	public void setLblSelectedTool(String currentTool){
-		lblSelectedTool.setText("Selected tool: "+currentTool);
+
+	public void setLblSelectedTool(String currentTool) {
+		lblSelectedTool.setText("Selected tool: " + currentTool);
 	}
-	
-	public JMenu getShapeJMenu(){
+
+	public JMenu getShapeJMenu() {
 		return mnShapes;
 	}
-	
-	public JFileChooser getJFileChooser(){
+
+	public JFileChooser getJFileChooser() {
 		return jFile;
 	}
-	
-	public void showErrorDialog(String msg){
+
+	public void showErrorDialog(String msg) {
 		JOptionPane.showMessageDialog(this, msg);
 	}
-	
 
 }

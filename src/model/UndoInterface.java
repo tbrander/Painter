@@ -1,7 +1,8 @@
 package model;
 
-interface UndoInterface{
+interface UndoInterface {
 	Shape undo();
+
 	int getIndex();
-	
+
 }

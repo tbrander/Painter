@@ -36,11 +36,12 @@ public class SaveLoadDrawings {
 	}
 
 	@SuppressWarnings("unchecked")
-	synchronized protected static List<Shape> loadFromFile(String fromPath)	throws FileNotFoundException {
+	synchronized protected static List<Shape> loadFromFile(String fromPath)
+			throws FileNotFoundException {
 
 		// throws FileNotFoundException
 		FileInputStream fileInputStream = new FileInputStream(fromPath);
-		
+
 		ObjectInputStream input = null;
 		List<Shape> shapes = null;
 

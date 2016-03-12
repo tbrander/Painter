@@ -12,6 +12,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -53,7 +54,8 @@ public class PaintController implements Observer {
 		ui.addMenyItemListeners(new MenyItemNewDocListener(),
 				new MenyItemSelectorListener(), new MenyItemUndoListener(),
 				new LineThicknessSliderListener(),
-				new MenyItemDeleteListener(), new MenyItemRedoListener(), new MenyItemSaveListener(), new MenyItemLoadListener());
+				new MenyItemDeleteListener(), new MenyItemRedoListener(),
+				new MenyItemSaveListener(), new MenyItemLoadListener());
 
 	}
 
@@ -71,7 +73,7 @@ public class PaintController implements Observer {
 	}
 
 	public enum tools {
-		NONE, SELECTION, DELETE;
+		NONE, SELECTION;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -209,46 +211,52 @@ public class PaintController implements Observer {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			paintModel.delete();
+			ui.getMntmDelete().setEnabled(false);
+			selectedTool = tools.NONE;
+			ui.setLblSelectedTool("none");
+			ui.getRdBtnItemSelect().setSelected(false);;
 		}
 	}
 
 	class MenyItemSaveListener implements ActionListener {
 
 		private String filename, path;
-		
+
 		public void actionPerformed(ActionEvent e) {
 
 			// present "Save" dialog:
 			int rVal = ui.getJFileChooser().showSaveDialog(ui);
-			if (rVal == ui.getJFileChooser().APPROVE_OPTION) {
-				filename= ui.getJFileChooser().getSelectedFile().getName();
-				if(!filename.contains(".draw")){
-					filename=filename.concat(".draw");
+			if (rVal == JFileChooser.APPROVE_OPTION) {
+				filename = ui.getJFileChooser().getSelectedFile().getName();
+				if (!filename.contains(".draw")) {
+					filename = filename.concat(".draw");
 				}
-				path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename);
+				path = ui.getJFileChooser().getCurrentDirectory().toString()
+						.concat("\\" + filename);
 				paintModel.saveToFile(path);
 			}
 		}
 	}
-	
+
 	class MenyItemLoadListener implements ActionListener {
 
 		private String filename, path;
-		
+
 		public void actionPerformed(ActionEvent e) {
-	      // Demonstrate "Open" dialog:
-	      int rVal = ui.getJFileChooser().showOpenDialog(ui);
-	      if (rVal == ui.getJFileChooser().APPROVE_OPTION) {
-	    	  filename=(ui.getJFileChooser().getSelectedFile().getName());
-	    	  path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename);
-	    	  try {
-				paintModel.loadFromFile(path);
-			} catch (FileNotFoundException e1) {
-				ui.showErrorDialog("File not found!");
-				e1.printStackTrace();
+			// present "load" dialog:
+			int rVal = ui.getJFileChooser().showOpenDialog(ui);
+			if (rVal == JFileChooser.APPROVE_OPTION) {
+				filename = (ui.getJFileChooser().getSelectedFile().getName());
+				path = ui.getJFileChooser().getCurrentDirectory().toString()
+						.concat("\\" + filename);
+				try {
+					paintModel.loadFromFile(path);
+				} catch (FileNotFoundException e1) {
+					ui.showErrorDialog("File not found!");
+					e1.printStackTrace();
+				}
 			}
-	      }
-	    }
+		}
 	}
 
 	// **************** Other listeners ******************* //
@@ -320,10 +328,7 @@ public class PaintController implements Observer {
 					ui.setLblSelectedTool("none");
 				} else
 					paintModel.selectShape(e.getX(), e.getY());
-
-			} else if (selectedTool == tools.DELETE) {
-
-			}
+			} 
 		}
 
 		@Override

@@ -1,7 +1,8 @@
 package model;
 
-interface RedoInterface{
+interface RedoInterface {
 	Shape redo();
+
 	int getIndex();
-	
+
 }

@@ -11,7 +11,7 @@ import java.util.Observer;
 
 import controller.PaintController;
 
-public class PaintModel extends Observable implements PaintModelInterface  {
+public class PaintModel extends Observable implements PaintModelInterface {
 
 	private List<Shape> shapes;
 	private List<Observer> observers;
@@ -25,33 +25,31 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 
 	// ********** Observers ****************
 	private PaintController paintController;
+
 	// *************************************
-	
-	
-	
+
 	public PaintModel(PaintController paintController) {
 
 		avaliableShapes = new ShapeFactory();
 		undo = new Undo();
 		redo = new Redo();
-		indexOfselectedShape=-1;
-		this.paintController=paintController;
+		indexOfselectedShape = -1;
+		this.paintController = paintController;
 		shapes = new ArrayList<>();
-		
+
 		observers = new ArrayList<>();
 		observers.add(paintController);
 		/*
-		addObserver(paintController);
-		addObserver(undo);
-		*/
-		
+		 * addObserver(paintController); addObserver(undo);
+		 */
+
 	}
 
 	@Override
 	public void addShape(Shape s) {
 		shapes.add(s);
-		undo.addToHistory(null, shapes.size()-1);
-		redo.addToHistory(s.copyToHistory(), shapes.size()-1);
+		undo.addToHistory(null, shapes.size() - 1);
+		redo.addToHistory(s.copyToHistory(), shapes.size() - 1);
 		setChanged();
 		notifyObservers();
 	}
@@ -59,10 +57,10 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	@Override
 	public void notifyObservers() {
 
-		for(Observer o : observers){
+		for (Observer o : observers) {
 			o.update(null, shapes);
 		}
-		
+
 	}
 
 	@Override
@@ -75,7 +73,7 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void resetDrawPanel() {
 		shapes.clear();
 		undo = new Undo();
-		indexOfselectedShape=-1;
+		indexOfselectedShape = -1;
 		setChanged();
 		notifyObservers();
 	}
@@ -84,16 +82,17 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 	public void selectShape(double x, double y) {
 
 		if (!activeSelection) {
-			indexOfselectedShape=shapes.size() - 1;
+			indexOfselectedShape = shapes.size() - 1;
 			for (; indexOfselectedShape >= 0; --indexOfselectedShape) {
 				if (shapes.get(indexOfselectedShape).getShape2D()
 						.contains(new Point2D.Double(x, y))) {
-					
-					undo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
-					
+
+					undo.addToHistory(shapes.get(indexOfselectedShape)
+							.copyToHistory(), indexOfselectedShape);
+
 					selectedShape = shapes.get(indexOfselectedShape);
 					selectedShape.setSelected();
-					activeSelection=true;
+					activeSelection = true;
 					paintController.drawSelected();
 					break;
 				}
@@ -103,92 +102,95 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 
 	@Override
 	public int getIndexOfSelectedShape() {
-		
+
 		return indexOfselectedShape;
 	}
 
 	@Override
-	public void updateShape(Color c, int lineThickness,
-			boolean isFilled) {
-		
-		shapes.get(indexOfselectedShape).updateShape(c, lineThickness, isFilled);
-		redo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
-		indexOfselectedShape=-1;
-		selectedShape=null;
-		activeSelection=false;
-		// 
+	public void updateShape(Color c, int lineThickness, boolean isFilled) {
+
+		shapes.get(indexOfselectedShape)
+				.updateShape(c, lineThickness, isFilled);
+		redo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(),
+				indexOfselectedShape);
+		indexOfselectedShape = -1;
+		selectedShape = null;
+		activeSelection = false;
+		//
 		setChanged();
 		notifyObservers();
 	}
-	
-	public void undo(){
-		try{
-		UndoInterface u=undo.undoChange();
-		
-		shapes.remove(u.getIndex());
-		if(u.undo()!=null)
-			shapes.add(u.getIndex(), u.undo());
-		
-		setChanged();
-		notifyObservers();
-		
-		}catch(EmptyStackException e){
+
+	public void undo() {
+		try {
+			UndoInterface u = undo.undoChange();
+
+			if(u.getIndex() <= shapes.size()-1)
+				shapes.remove(u.getIndex());
+			if (u.undo() != null)
+				shapes.add(u.getIndex(), u.undo());
+
+			setChanged();
+			notifyObservers();
+
+		} catch (EmptyStackException e) {
 			System.out.println("Error: empty stack!");
 		}
-		
+
 	}
 
 	@Override
-	public Shape makeShape(EnumShapes s,double x1, double y1, int x2, int y2,
+	public Shape makeShape(EnumShapes s, double x1, double y1, int x2, int y2,
 			Color color, int lineThickness, boolean isFilled) {
-		
-		return avaliableShapes.makeShape(s, x1, y1, x2, y2, color, lineThickness, isFilled);
+
+		return avaliableShapes.makeShape(s, x1, y1, x2, y2, color,
+				lineThickness, isFilled);
 	}
 
 	@Override
 	public void delete() {
-		
-		undo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(), indexOfselectedShape);
+
+		undo.addToHistory(shapes.get(indexOfselectedShape).copyToHistory(),
+				indexOfselectedShape);
 		shapes.remove(indexOfselectedShape);
-		shapes.add(indexOfselectedShape, null);
-		indexOfselectedShape=-1;
-		selectedShape=null;
-		activeSelection=false;
+		//shapes.add(indexOfselectedShape, null);
+		indexOfselectedShape = -1;
+		selectedShape = null;
+		activeSelection = false;
 		setChanged();
 		notifyObservers();
 	}
 
 	@Override
 	public void redo() {
-		try{
-			RedoInterface u=redo.redoChange();
-		
+		try {
+			RedoInterface u = redo.redoChange();
+
 			shapes.add(u.redo());
-			
+
 			setChanged();
 			notifyObservers();
-			
-			}catch(EmptyStackException e){
-				System.out.println("Error: empty stack!");
-			}
+
+		} catch (EmptyStackException e) {
+			System.out.println("Error: empty stack!");
+		}
 	}
 
 	@Override
 	public void saveToFile(String toPath) {
-		
+
 		SaveLoadDrawings.saveToFile(shapes, toPath);
-		
+
 	}
 
 	@Override
 	public void loadFromFile(String fromPath) throws FileNotFoundException {
 		shapes.clear();
 		shapes.addAll(SaveLoadDrawings.loadFromFile(fromPath));
-		
+
 		setChanged();
 		notifyObservers();
-		
+
 	}
 
-	
 }

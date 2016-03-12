@@ -1,6 +1,5 @@
 package model;
 
-
 public enum EnumShapes {
 	CIRCLE, SQUARE, RECTANGLE, TRIANGLE, LINE, ARC;
 
@@ -18,7 +17,5 @@ public enum EnumShapes {
 	public Shape getEnumShape() {
 		return shape;
 	}
-	
-	
 
 }
