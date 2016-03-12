@@ -3,10 +3,13 @@ package model;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D.Double;
 
 public class Circle extends Shape {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3226507062760539755L;
 	private double radius;
 	
 	

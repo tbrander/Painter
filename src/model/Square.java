@@ -2,12 +2,15 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 public class Square extends Shape {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1361903484131837309L;
 	private double width, height;
 	
 	

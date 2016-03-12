@@ -3,10 +3,13 @@ package model;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.geom.Rectangle2D;
 
 public class Triangle extends Shape {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9041672334055208067L;
 	private int[] xPoa, yPoa;
 	
 	

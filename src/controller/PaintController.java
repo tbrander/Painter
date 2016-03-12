@@ -9,23 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JColorChooser;
-import javax.swing.JMenuItem;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import model.Arc;
-import model.Circle;
 import model.EnumShapes;
-import model.Line;
 import model.PaintModel;
 import model.PaintModelInterface;
-import model.Rectangle;
 import model.Shape;
-import model.Square;
-import model.Triangle;
 import view.UserInterface;
 
 public class PaintController implements Observer {
@@ -36,14 +27,14 @@ public class PaintController implements Observer {
 	private tools selectedTool;
 	private double pressedX, pressedY;
 	private List<ShapeMenuItems> listeners;
-	
+
 	public PaintController(UserInterface userInterface) {
 
-		selectedTool=tools.NONE;
+		selectedTool = tools.NONE;
 		currentShapeFlag = EnumShapes.CIRCLE;
 		paintModel = new PaintModel(this); // :P
 		ui = userInterface;
-		
+
 		listeners = new ArrayList<>();
 		listeners.add(new BtnCircleListener());
 		listeners.add(new BtnLineListener());
@@ -52,65 +43,67 @@ public class PaintController implements Observer {
 		listeners.add(new BtnTriangleListener());
 		listeners.add(new BtnArcListener());
 		initializeShapeMenuItems();
-		
-		
+
 		ui.addPanelListeners(new AddMouseListenerDrawPanel(),
 				new ColorLinePanelListener());
 
-		ui.addMenyItemListeners(new MenyItemNewDocListener(), new MenyItemSelectorListener(), new MenyItemUndoListener(), new LineThicknessSliderListener(),new MenyItemDeleteListener(),new MenyItemRedoListener());
-		
+		ui.addMenyItemListeners(new MenyItemNewDocListener(),
+				new MenyItemSelectorListener(), new MenyItemUndoListener(),
+				new LineThicknessSliderListener(),
+				new MenyItemDeleteListener(), new MenyItemRedoListener(), new MenyItemSaveListener());
+
 	}
-	
-	private void initializeShapeMenuItems(){
-		for(int i=0;i<EnumShapes.values().length;++i){
-			for(int j=0;j < EnumShapes.values().length;++j){
-				if(listeners.get(i).getType().equals(EnumShapes.values()[j])){					
-					ui.addButtonAndSlideListeners((ActionListener) listeners.get(i), EnumShapes.values()[j].toString());
-					
+
+	private void initializeShapeMenuItems() {
+		for (int i = 0; i < EnumShapes.values().length; ++i) {
+			for (int j = 0; j < EnumShapes.values().length; ++j) {
+				if (listeners.get(i).getType().equals(EnumShapes.values()[j])) {
+					ui.addButtonAndSlideListeners(
+							(ActionListener) listeners.get(i),
+							EnumShapes.values()[j].toString());
+
 				}
 			}
 		}
 	}
 
 	public enum tools {
-		 NONE, SELECTION,DELETE;
+		NONE, SELECTION, DELETE;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void update(Observable o, Object arg) {
 		List<Shape> shapeList = (List<Shape>) arg;
-		
+
 		ui.getDrawPanel().paintAll(ui.getDrawPanel().getGraphics());
-		
+
 		for (Shape s : shapeList) {
-			if(s!=null)
+			if (s != null)
 				s.draw(ui.getDrawPanel().getGraphics());
 		}
-		
+
 	}
-	
+
 	public void drawSelected() {
 		for (Shape s : paintModel.getShapeList()) {
 			s.draw(ui.getDrawPanel().getGraphics());
 		}
 		ui.getMntmDelete().setEnabled(true);
-		
+
 	}
 
+	// *************** Btn listeners **************** //
 
-	// ***************  Btn listeners **************** //
-	
 	class BtnCircleListener extends ShapeMenuItems implements ActionListener {
-		
-		
-		
+
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.CIRCLE;
 			ui.setLblSelectedShape("Circle");
 		}
+
 		@Override
-		public EnumShapes getType(){
+		public EnumShapes getType() {
 			return EnumShapes.CIRCLE;
 		}
 	}
@@ -120,8 +113,8 @@ public class PaintController implements Observer {
 			currentShapeFlag = EnumShapes.SQUARE;
 			ui.setLblSelectedShape("Square");
 		}
-		
-		public EnumShapes getType(){
+
+		public EnumShapes getType() {
 			return EnumShapes.SQUARE;
 		}
 	}
@@ -131,19 +124,19 @@ public class PaintController implements Observer {
 			currentShapeFlag = EnumShapes.RECTANGLE;
 			ui.setLblSelectedShape("Rectangle");
 		}
-		
-		public EnumShapes getType(){
+
+		public EnumShapes getType() {
 			return EnumShapes.RECTANGLE;
 		}
 	}
-	
+
 	class BtnArcListener extends ShapeMenuItems implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			currentShapeFlag = EnumShapes.ARC;
 			ui.setLblSelectedShape("Arc");
 		}
-		
-		public EnumShapes getType(){
+
+		public EnumShapes getType() {
 			return EnumShapes.ARC;
 		}
 	}
@@ -153,8 +146,8 @@ public class PaintController implements Observer {
 			currentShapeFlag = EnumShapes.TRIANGLE;
 			ui.setLblSelectedShape("Triangle");
 		}
-		
-		public EnumShapes getType(){
+
+		public EnumShapes getType() {
 			return EnumShapes.TRIANGLE;
 		}
 	}
@@ -164,28 +157,28 @@ public class PaintController implements Observer {
 			currentShapeFlag = EnumShapes.LINE;
 			ui.setLblSelectedShape("Line");
 		}
-		
-		public EnumShapes getType(){
+
+		public EnumShapes getType() {
 			return EnumShapes.LINE;
 		}
 	}
-	
+
 	// **************** MenuItem listeners *************** //
 
 	class MenyItemSelectorListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if(selectedTool!=tools.SELECTION){
-				selectedTool=tools.SELECTION;
+			if (selectedTool != tools.SELECTION) {
+				selectedTool = tools.SELECTION;
 				ui.setLblSelectedTool("Marquee");
-			}else{
-				selectedTool=tools.NONE;
+			} else {
+				selectedTool = tools.NONE;
 				ui.setLblSelectedTool("none");
 			}
 		}
 	}
-	
+
 	class MenyItemNewDocListener implements ActionListener {
 
 		@Override
@@ -193,7 +186,7 @@ public class PaintController implements Observer {
 			paintModel.resetDrawPanel();
 		}
 	}
-	
+
 	class MenyItemUndoListener implements ActionListener {
 
 		@Override
@@ -201,24 +194,43 @@ public class PaintController implements Observer {
 			paintModel.undo();
 		}
 	}
-	
-	class MenyItemRedoListener implements ActionListener{
+
+	class MenyItemRedoListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			paintModel.redo();
 		}
 	}
-	
-	class MenyItemDeleteListener implements ActionListener{
+
+	class MenyItemDeleteListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			paintModel.delete();
 		}
 	}
-	
-	
+
+	class MenyItemSaveListener implements ActionListener {
+
+		private String filename, path;
+		
+		public void actionPerformed(ActionEvent e) {
+
+			// present "Save" dialog:
+			int rVal = ui.getJFileChooser().showSaveDialog(ui);
+			if (rVal == ui.getJFileChooser().APPROVE_OPTION) {
+				filename= ui.getJFileChooser().getSelectedFile().getName();
+				path= ui.getJFileChooser().getCurrentDirectory().toString().concat("\\"+filename+".draw");
+				paintModel.saveToFile(path);
+			}
+			if (rVal == ui.getJFileChooser().CANCEL_OPTION) {
+				System.out.println("Cancle");
+				return;
+			}
+		}
+	}
+
 	// **************** Other listeners ******************* //
-	
+
 	class LineThicknessSliderListener implements ChangeListener {
 
 		@Override
@@ -228,7 +240,7 @@ public class PaintController implements Observer {
 		}
 
 	}
-	
+
 	class ColorLinePanelListener implements MouseListener {
 
 		@Override
@@ -272,24 +284,23 @@ public class PaintController implements Observer {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			
-			if(selectedTool==tools.SELECTION){
+
+			if (selectedTool == tools.SELECTION) {
 				boolean isFilled = ui.getRadioBtnOption();
 				Color color = ui.getColorPanelPaint();
 				int lineThickness = ui.getLineThickness();
-				
-				if(paintModel.getIndexOfSelectedShape() >=0){
-					paintModel.updateShape(color,lineThickness, isFilled);
+
+				if (paintModel.getIndexOfSelectedShape() >= 0) {
+					paintModel.updateShape(color, lineThickness, isFilled);
 					ui.getRdBtnItemSelect().setSelected(false);
 					ui.getMntmDelete().setEnabled(false);
 					selectedTool = tools.NONE;
 					ui.setLblSelectedTool("none");
-				}else
+				} else
 					paintModel.selectShape(e.getX(), e.getY());
-				
-			}else if(selectedTool==tools.DELETE){
-				
+
+			} else if (selectedTool == tools.DELETE) {
+
 			}
 		}
 
@@ -307,26 +318,26 @@ public class PaintController implements Observer {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-				pressedX = e.getX();
-				pressedY = e.getY();
+			pressedX = e.getX();
+			pressedY = e.getY();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 
-			if(selectedTool != tools.NONE) return;
-			
+			if (selectedTool != tools.NONE)
+				return;
+
 			boolean isFilled = ui.getRadioBtnOption();
 			Color color = ui.getColorPanelPaint();
 			int lineThickness = ui.getLineThickness();
-			
-			
-			Shape newShape=paintModel.makeShape(currentShapeFlag,pressedX,pressedY,e.getX(), e.getY(), color,
-					lineThickness, isFilled);
-			
+
+			Shape newShape = paintModel.makeShape(currentShapeFlag, pressedX,
+					pressedY, e.getX(), e.getY(), color, lineThickness,
+					isFilled);
+
 			paintModel.addShape(newShape);
 		}
 	}
 
-	
 }

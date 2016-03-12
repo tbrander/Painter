@@ -172,5 +172,12 @@ public class PaintModel extends Observable implements PaintModelInterface  {
 			}
 	}
 
+	@Override
+	public void saveToFile(String toPath) {
+		
+		SaveLoadDrawings.saveToFile(shapes, toPath);
+		
+	}
+
 	
 }

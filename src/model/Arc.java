@@ -7,6 +7,10 @@ import java.awt.geom.*;
 public class Arc extends Shape {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4492176253773548476L;
 	private double width, height;
 	
 	

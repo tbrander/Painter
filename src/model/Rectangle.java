@@ -7,6 +7,10 @@ import java.awt.geom.*;
 public class Rectangle extends Shape {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6239931037559714174L;
 	private double width, height;
 	
 	

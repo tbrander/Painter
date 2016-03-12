@@ -5,9 +5,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.Serializable;
 
-public abstract class Shape implements Cloneable{
+public abstract class Shape implements Cloneable, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5565048844507033259L;
 	private double x1, y1,x2,y2;
 	private Color color;
 	private int strokeThickness;

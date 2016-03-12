@@ -8,6 +8,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -26,11 +27,7 @@ import controller.PaintController;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 
-import model.EnumShapes;
-
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserInterface extends JFrame {
 
@@ -43,15 +40,14 @@ public class UserInterface extends JFrame {
 	private JButton btnCircle, btnSquare, btnRectangle, btnTriangle, btnArc,btnLine;
 	private JSlider sliderLineThickness;
 	private JLabel lblLineThickness, lblSelectedShape, lblSelectedTool;
-	private PaintController paintController;
 	private JRadioButton rdbtnOutline, rdbtnFilled;
 	private JRadioButtonMenuItem rdBtnItemSelect;
-	private List<JRadioButtonMenuItem> shapeItemList;
+	private JFileChooser jFile;
 	
 	
 	public UserInterface() {
 		
-		shapeItemList = new ArrayList<>();
+		jFile = new JFileChooser();
 		
 		setTitle("Painter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -205,7 +201,8 @@ public class UserInterface extends JFrame {
 		lblSelectedTool.setBounds(352, 12, 202, 16);
 		contentPane.add(lblSelectedTool);
 		
-		paintController = new PaintController(this);
+		@SuppressWarnings("unused")
+		PaintController paintController = new PaintController(this);
 	}
 	
 	
@@ -234,7 +231,7 @@ public class UserInterface extends JFrame {
 	
 	
 	public void addMenyItemListeners(
-			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener) {
+			ActionListener addMouseListenerFileMenyItemNewDoc, ActionListener menyItemSelectorListener, ActionListener menyItemUndoListener, ChangeListener lineThicknessSliderListener, ActionListener menyItemDeleteListener, ActionListener menyItemRedoListener, ActionListener menyItemSaveListener) {
 		
 		mntmNewDocument.addActionListener(addMouseListenerFileMenyItemNewDoc);
 		rdBtnItemSelect.addActionListener(menyItemSelectorListener);
@@ -242,6 +239,7 @@ public class UserInterface extends JFrame {
 		sliderLineThickness.addChangeListener(lineThicknessSliderListener);
 		mntmDelete.addActionListener(menyItemDeleteListener);
 		mntmRedo.addActionListener(menyItemRedoListener);
+		mntmSave.addActionListener(menyItemSaveListener);
 	}
 
 	public Color getColorPanelPaint() {
@@ -282,6 +280,9 @@ public class UserInterface extends JFrame {
 		return mnShapes;
 	}
 	
+	public JFileChooser getJFileChooser(){
+		return jFile;
+	}
 	
 
 }

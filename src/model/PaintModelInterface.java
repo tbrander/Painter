@@ -20,5 +20,6 @@ public interface PaintModelInterface {
 	Shape makeShape(EnumShapes shape, double pressedX, double pressedY, int i, int j, Color color, int lineThickness, boolean isFilled);
 	void delete();
 	void redo();
+	void saveToFile(String path);
 
 }

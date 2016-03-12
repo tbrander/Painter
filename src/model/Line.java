@@ -6,6 +6,11 @@ import java.awt.geom.Line2D;
 
 public class Line extends Shape {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4577707906447731440L;
+
 	public Line() {
 		super();
 	}
