@@ -13,6 +13,7 @@ import java.util.Observer;
 
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,11 +22,12 @@ import model.EnumShapes;
 import model.PaintModel;
 import model.PaintModelInterface;
 import model.Shape;
+import view.PaintViewInterface;
 import view.UserInterface;
 
 public class PaintController implements Observer {
 
-	private UserInterface ui;
+	private PaintViewInterface ui;
 	private PaintModelInterface paintModel;
 	private EnumShapes currentShapeFlag;
 	private tools selectedTool;
@@ -225,7 +227,7 @@ public class PaintController implements Observer {
 		public void actionPerformed(ActionEvent e) {
 
 			// present "Save" dialog:
-			int rVal = ui.getJFileChooser().showSaveDialog(ui);
+			int rVal = ui.getJFileChooser().showSaveDialog((JFrame)ui);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				filename = ui.getJFileChooser().getSelectedFile().getName();
 				if (!filename.contains(".draw")) {
@@ -244,7 +246,7 @@ public class PaintController implements Observer {
 
 		public void actionPerformed(ActionEvent e) {
 			// present "load" dialog:
-			int rVal = ui.getJFileChooser().showOpenDialog(ui);
+			int rVal = ui.getJFileChooser().showOpenDialog((JFrame)ui);
 			if (rVal == JFileChooser.APPROVE_OPTION) {
 				filename = (ui.getJFileChooser().getSelectedFile().getName());
 				path = ui.getJFileChooser().getCurrentDirectory().toString()
@@ -278,7 +280,7 @@ public class PaintController implements Observer {
 
 			Color color = ui.getColorPanelPaint();
 
-			Color newColor = JColorChooser.showDialog(ui, "Choose line Color",
+			Color newColor = JColorChooser.showDialog((JFrame)ui, "Choose line Color",
 					color);
 			if (newColor != null)
 				ui.getColorPanel().setBackground(newColor);

@@ -32,7 +32,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import java.awt.Font;
 
-public class UserInterface extends JFrame {
+public class UserInterface extends JFrame implements PaintViewInterface{
 
 	private static final long serialVersionUID = -6596013991710495573L;
 
